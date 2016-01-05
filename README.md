@@ -1,5 +1,8 @@
 # AIM1 project "NiteOut"
 
+[![Build Status (master)](https://travis-ci.org/hielsnoppe/edu-aim1.svg?branch=master)](https://travis-ci.org/hielsnoppe/edu-aim1)
+[![Build Status (develop)](https://travis-ci.org/hielsnoppe/edu-aim1.svg?branch=develop)](https://travis-ci.org/hielsnoppe/edu-aim1)
+
 A personal request:
 
 Those who are familiar with [Gitflow](http://nvie.com/posts/a-successful-git-branching-model/), please use it. A short introduction to all the others:
