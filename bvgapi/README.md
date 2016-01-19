@@ -15,19 +15,18 @@ __Dependencies__
 Install
 -------------------
 
-    `cd bvg-api`
-    `npm install`
+    cd bvg-api
+    npm install
 
 Run
 -------------------
 
-    `npm start`
+    npm start
 
 
 How to use
--------------------
 
-    After you have successfully started the server by the above command, now you can open the browser and enter in the URL with the name of the station. For example, `http://localhost:3000/station/Leopolplatz`. You will get a JSON having information about the station and the directions to other stations. 
+    * After you have successfully started the server by the above command, now you can open the browser and enter in the URL with the name of the station. For example, `http://localhost:3000/station/Leopolplatz`. You will get a JSON having information about the station and the directions to other stations. 
 
 
 Develop
