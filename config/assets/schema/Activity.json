@@ -1,0 +1,6 @@
+{
+    "type": "RestaurantActivity",
+
+    "aggregateRating": 3.7,
+    "cuisine": "Italian"
+}

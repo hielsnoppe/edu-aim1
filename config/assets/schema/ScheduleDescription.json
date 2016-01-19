@@ -1,0 +1,48 @@
+{
+    "startDateTime": "",
+    "startLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+    },
+
+    "endDateTime": "",
+    "endLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+    },
+
+    "activities": [
+        {
+            "options": [
+                {
+                    "description": "see ActivityDescription",
+                    "weight": 7
+                },
+                {
+                    "description": "see ActivityDescription",
+                    "weight": 5
+                }
+            ]
+        },
+        {
+            "options": [
+                {
+                    "description": "see ActivityDescription",
+                    "weight": 10
+                }
+            ]
+        }
+    ],
+
+    "transportPreferences": {
+
+        "maximumWalkingDistance": {
+            "value": 1,
+            "unit": "km"
+        },
+        "maximumDuration": {
+            "value": 20,
+            "unit": "min"
+        }
+    }
+}
