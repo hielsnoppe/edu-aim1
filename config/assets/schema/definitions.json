@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "",
+	"description": "",
+
+    "definitions": {
+
+        "ActivitySpecification": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "properties": { "$ref": "#/definitions/PropertySpecification" }
+            }
+        },
+
+        "PropertySpecification": { "oneOf": [
+            { "$ref": "#/definitions/TextPropertySpecification" },
+            { "$ref": "#/definitions/NumberPropertySpecification" },
+            { "$ref": "#/definitions/EnumPropertySpecification" }
+        ]},
+
+        "TextPropertySpecification": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string" },
+                "enum": { "type": "array" }
+            }
+        },
+
+        "NumberPropertySpecification": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string" },
+                "enum": { "type": "array" }
+            }
+        },
+
+        "EnumPropertySpecification": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string" },
+                "enum": { "type": "array" }
+            }
+        },
+
+        "ScheduleDescription": {
+            "type": "object",
+            "properties": {
+
+                "startDateTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+
+                "startLocation": { "$ref": "#/definitions/LocationDescription" },
+
+                "endDateTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+
+                "endLocation": { "$ref": "#/definitions/LocationDescription" },
+
+                "activities": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "options": {
+                                "type": "array",
+                                "items": { "$ref": "#/definitions/ActivityDescription" }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "ActivityDescription": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" }
+            }
+        },
+
+        "LocationDescription": {
+            "type": "object",
+            "properties": {
+                "latitude": { "type": "number" },
+                "longitude": { "type": "number" }
+            }
+        }
+    }
+}

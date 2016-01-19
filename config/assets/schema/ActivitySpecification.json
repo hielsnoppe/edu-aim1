@@ -1,0 +1,36 @@
+{
+    "name": "RestaurantActivity",
+    "description": "A human readable description of this type of activity",
+
+    "properties": {
+        "cuisine": {
+            "type": "string",
+            "enum": [
+                "Italian",
+                "French",
+                "Chinese",
+                "other"
+            ]
+        },
+        "minimumRating": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+        },
+        "priceRange": {
+        },
+        "aggregateRating": {
+            "name": "restaurantRating",
+        },
+        "restaurantType": {
+        },
+        "wifiAvailable": {
+        },
+        "telephoneNumber": {
+        },
+        "reservationRequirement": {
+        },
+        "restaurantReviews": {
+        }
+    }
+}
