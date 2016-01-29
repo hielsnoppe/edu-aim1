@@ -1,48 +1,48 @@
 {
-    "startDateTime": "",
-    "startLocation": {
-        "latitude": 0.0,
-        "longitude": 0.0
-    },
+  "startDateTime": "",
+  "startLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
 
-    "endDateTime": "",
-    "endLocation": {
-        "latitude": 0.0,
-        "longitude": 0.0
-    },
+  "endDateTime": "",
+  "endLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
 
-    "activities": [
+  "activities": [
+    {
+      "options": [
         {
-            "options": [
-                {
-                    "description": "see ActivityDescription",
-                    "weight": 7
-                },
-                {
-                    "description": "see ActivityDescription",
-                    "weight": 5
-                }
-            ]
+          "description": "see ActivityDescription",
+          "weight": 7
         },
         {
-            "options": [
-                {
-                    "description": "see ActivityDescription",
-                    "weight": 10
-                }
-            ]
+          "description": "see ActivityDescription",
+          "weight": 5
         }
-    ],
-
-    "transportPreferences": {
-
-        "maximumWalkingDistance": {
-            "value": 1,
-            "unit": "km"
-        },
-        "maximumDuration": {
-            "value": 20,
-            "unit": "min"
+      ]
+    },
+    {
+      "options": [
+        {
+          "description": "see ActivityDescription",
+          "weight": 10
         }
+      ]
     }
+  ],
+
+  "transportPreferences": {
+
+    "maximumWalkingDistance": {
+      "value": 1,
+      "unit": "km"
+    },
+    "maximumDuration": {
+      "value": 20,
+      "unit": "min"
+    }
+  }
 }

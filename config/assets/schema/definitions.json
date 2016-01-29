@@ -1,95 +1,65 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "",
-	"description": "",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "",
+  "description": "",
 
-    "definitions": {
+  "definitions": {
 
-        "ActivitySpecification": {
-            "type": "object",
-            "properties": {
-                "name": { "type": "string" },
-                "description": { "type": "string" },
-                "properties": { "$ref": "#/definitions/PropertySpecification" }
-            }
+    "ActivitySpecification": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "properties": { "$ref": "properties.json#/definitions/PropertySpecification" }
+      }
+    },
+
+    "ScheduleDescription": {
+      "type": "object",
+      "properties": {
+
+        "startDateTime": {
+          "type": "string",
+          "format": "date-time"
         },
 
-        "PropertySpecification": { "oneOf": [
-            { "$ref": "#/definitions/TextPropertySpecification" },
-            { "$ref": "#/definitions/NumberPropertySpecification" },
-            { "$ref": "#/definitions/EnumPropertySpecification" }
-        ]},
+        "startLocation": { "$ref": "#/definitions/LocationDescription" },
 
-        "TextPropertySpecification": {
-            "type": "object",
-            "properties": {
-                "type": { "type": "string" },
-                "enum": { "type": "array" }
-            }
+        "endDateTime": {
+          "type": "string",
+          "format": "date-time"
         },
 
-        "NumberPropertySpecification": {
+        "endLocation": { "$ref": "#/definitions/LocationDescription" },
+
+        "activities": {
+          "type": "array",
+          "items": {
             "type": "object",
             "properties": {
-                "type": { "type": "string" },
-                "enum": { "type": "array" }
+              "options": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/ActivityDescription" }
+              }
             }
-        },
-
-        "EnumPropertySpecification": {
-            "type": "object",
-            "properties": {
-                "type": { "type": "string" },
-                "enum": { "type": "array" }
-            }
-        },
-
-        "ScheduleDescription": {
-            "type": "object",
-            "properties": {
-
-                "startDateTime": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-
-                "startLocation": { "$ref": "#/definitions/LocationDescription" },
-
-                "endDateTime": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-
-                "endLocation": { "$ref": "#/definitions/LocationDescription" },
-
-                "activities": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "options": {
-                                "type": "array",
-                                "items": { "$ref": "#/definitions/ActivityDescription" }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-
-        "ActivityDescription": {
-            "type": "object",
-            "properties": {
-                "name": { "type": "string" }
-            }
-        },
-
-        "LocationDescription": {
-            "type": "object",
-            "properties": {
-                "latitude": { "type": "number" },
-                "longitude": { "type": "number" }
-            }
+          }
         }
+      }
+    },
+
+    "ActivityDescription": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      }
+    },
+
+    "LocationDescription": {
+      "type": "object",
+      "properties": {
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" }
+      }
     }
+  }
 }
