@@ -37,3 +37,17 @@ Watch for changes and restart server automatically:
 
     gulp develop
 
+Google API explanation JSON file
+===================
+
+In our file the source and destination can be provided in either gps coordinates, saying logitude and latitude or with the name of the place/street.
+In the response we provide information regarding:
+transportation time
+arrival time
+destination time
+distance
+number of transfers
+direction of transfers
+lines and line name
+duration of each line
+number of stops each line
