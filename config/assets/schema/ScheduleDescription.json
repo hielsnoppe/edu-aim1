@@ -15,20 +15,56 @@
     {
       "options": [
         {
-          "description": "see ActivityDescription",
-          "weight": 7
+          "weight": 7,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Italian"
+                }
+              ]
+            }
+          ]
         },
         {
-          "description": "see ActivityDescription",
-          "weight": 5
+          "weight": 5,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Lebanese"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "options": [
         {
-          "description": "see ActivityDescription",
-          "weight": 10
+          "weight": 10,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Burgers"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

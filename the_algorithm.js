@@ -2,21 +2,10 @@
 
 var dummy = {
   ActivityDescription: [
-    {
-      "type": "RestaurantActivity",
-      "properties": [
-        {
-          "weight": 5,
-          "name": "cuisine",
-          "values": [
-            {
-              "weight": 5,
-              "value": "Italian"
-            }
-          ]
-        }
-      ]
-    }
+    require('./config/assets/schema/ActivityDescription.json')
+  ],
+  ScheduleDescription: [
+    require('./config/assets/schema/ScheduleDescription.json')
   ],
   Activity: [
     {
@@ -62,32 +51,48 @@ var dummy = {
   ]
 };
 
-/**
- * @param ActivityDescription
- * @return [Activity]
- */
-function wrapperDummy () {
+var restaurantWrapper = {
+  getActivities: function (description) {
 
-  return dummy.Activity;
-}
+    return dummy.Activity;
+  }
+};
 
 var wrapperRegistry = {
   RestaurantActivity: [
-    wrapperDummy
+    restaurantWrapper
   ]
 };
 
-var asdf = {
-  key: [
-    'asdf', 10, 1.5, [], { key: value }
-  ]
-};
+/**
+ *
+ */
+function expandSchedule (description) {
+
+  var result = [];
+
+  description.activities.forEach(function (description) {
+
+    var activities = [];
+
+    description.options.forEach(function (description) {
+
+      activities = activities.concat(expandActivity(description));
+    });
+
+    result.push(activities);
+  });
+
+  return result;
+}
 
 /**
  * @param ActivityDescription
  * @return [Activity]
  */
-function expand (description) {
+function expandActivity (description) {
+
+  console.log(description);
 
   // find appropriate wrapper
   var wrappers = wrapperRegistry[description.type];
@@ -98,7 +103,7 @@ function expand (description) {
     // call wrapper
     var activities = wrapper.getActivities(description);
 
-    result.push(activities);
+    result = result.concat(activities);
   });
 
   return result;
@@ -108,10 +113,34 @@ function expand (description) {
  * @param [[Activity]]
  * @return [[Activity]]
  */
-function combinations () {
+function combinations (activities) {
+
+  activities.each(function (options) {
+
+  });
+}
+
+function Schedule () {
+  //
+}
+
+Schedule.prototype.rank = function (description) {
+
+};
+
+function Activity () {
 
 }
 
-function rank () {
+Activity.prototype.rank = function (description) {
 
+};
+
+function main () {
+
+  var result = expandSchedule(dummy.ScheduleDescription[0]);
+
+  console.log(result);
 }
+
+main();
