@@ -5,10 +5,11 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  MovieActivity = mongoose.model('MovieActivity'),
+  CinemaActivity = mongoose.model('CinemaActivity'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-var movieWrapper = require('../wrappers/googlemovies.server.wrapper');
+var movieWrapper = require('../wrappers/cinema.server.wrapper');
+var transportWrapper = require('../wrappers/transport.server.wrapper');
 
 var request = require('request');
 var cheerio = require('cheerio');
@@ -17,7 +18,7 @@ var cheerio = require('cheerio');
  * Create a movie
  */
 exports.create = function (req, res) {
-  var movie = new MovieActivity(req.body);
+  var movie = new CinemaActivity(req.body);
   movie.user = req.user;
 
   movie.save(function (err) {
@@ -79,7 +80,7 @@ exports.delete = function (req, res) {
  * List of Movies
  */
 exports.list = function (req, res) {
-  MovieActivity.find().sort('-created').populate('user', 'displayName').exec(function (err, movies) {
+  CinemaActivity.find().sort('-created').populate('user', 'displayName').exec(function (err, movies) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -122,6 +123,19 @@ exports.activityByID = function (req, res, next, id) {
 exports.update = function (req, res) {
 
   var result = movieWrapper.fetch();
-  
+
+  res.json(result);
+};
+
+/**
+ * Test transportation
+ */
+exports.transport = function (req, res) {
+
+  var src = req.params.src;
+  var dest = req.params.dest;
+
+  var result = transportWrapper.fetch(src, dest);
+
   res.json(result);
 };

@@ -4,16 +4,15 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+  extend = require('mongoose-schema-extend'),
   Schema = mongoose.Schema;
+
+var ActivitySchema = require('./activity.server.model.js').schema;
 
 /**
  * Movie Schema
  */
-var MovieActivitySchema = new Schema({
-  created: {
-    type: Date,
-    default: Date.now
-  },
+var CinemaActivitySchema = ActivitySchema.extend({
   title: {
     type: String,
     default: '',
@@ -32,4 +31,4 @@ var MovieActivitySchema = new Schema({
   }
 });
 
-mongoose.model('MovieActivity', MovieActivitySchema);
+mongoose.model('CinemaActivity', CinemaActivitySchema);

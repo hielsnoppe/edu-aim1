@@ -4,8 +4,9 @@
  * Module dependencies.
  */
 var path = require('path'),
+  util = require('../../../common/server/util.server.js'),
   mongoose = require('mongoose'),
-  MovieActivity = mongoose.model('MovieActivity');
+  CinemaActivity = mongoose.model('CinemaActivity');
 
 var request = require('request');
 var cheerio = require('cheerio');
@@ -57,7 +58,7 @@ wrapper.extractItems = function (html) {
 
       // Save to DB
 
-      var movie = new MovieActivity(showing);
+      var movie = new CinemaActivity(showing);
 
       movie.save(function (err) {
         if (err) {
@@ -89,13 +90,18 @@ wrapper.responseHandler = function (error, response, html) {
 wrapper.fetch = function () {
 
   var near = 'Berlin';
-  var baseurl = 'http://www.google.de/movies?near=' + near + '&start=';
+  var baseurl = 'http://www.google.de/movies';
+  var params = {
+
+    near: near,
+    start: 0
+  };
 
   for (var i = 0; i <= 70; i += 10) {
 
-    var link = baseurl + i;
+    params.start = i;
 
-    request(link, this.responseHandler);
+    request(util.makeurl(baseurl, params), this.responseHandler);
   }
 
   return 'Done';

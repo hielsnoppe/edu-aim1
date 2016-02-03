@@ -7,28 +7,14 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Movie Schema
+ * Restaurant Schema
  */
 var RestaurantActivitySchema = new Schema({
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  title: {
+  name: {
     type: String,
     default: '',
     trim: true,
     required: 'Title cannot be blank'
-  },
-  infos: {
-    type: String,
-    default: '',
-    trim: true
-  },
-  times: {
-    type: String,
-    default: '',
-    trim: true
   }
 });
 

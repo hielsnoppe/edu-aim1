@@ -11,9 +11,9 @@ function print_on_cmd_line(src, dest){
   return direction_string;
 }
 
-//Please use 'direction' to use it in other js file or use 'test' to print on command prompt 
+//Please use 'direction' to use it in other js file or use 'test' to print on command prompt
 module.exports = function (src, dest){
-  return{
+  return {
     direction: function(){
       var returnDir = callDir(src, dest,flag);
       return returnDir;
@@ -34,10 +34,13 @@ function callDir (src, dest, flag){
 }
 
 function getDirections (src, dest) {
+
   request.get('https://maps.googleapis.com/maps/api/directions/json?origin=' + src +
   '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
     function(error, response, body) {
+
       if (!error && response.statusCode == 200) {
+
         var direction_string = [];
         direction_string.push("\nFetching the Directions....\n");
         console.log("\nFetching the Directions....\n");
@@ -145,7 +148,7 @@ function getDirections (src, dest) {
               if (typeof (json.routes[0].legs[0].steps) == 'undefined') {
                 direction_string.push("No Directions for the given source and destination");
                 console.log("No Directions for the given source and destination");
-                
+
               } else {
                 //Printing directions until no steps left
                 var noStep = steps;

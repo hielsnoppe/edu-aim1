@@ -15,6 +15,9 @@ module.exports = function (app) {
   app.route('/api/activities/update')
     .get(activities.update);
 
+  app.route('/api/activities/transport/:src/:dest')
+    .get(activities.transport);
+
   /*
   // Single movie routes
   app.route('/api/activities/:movieId').all(activitiesPolicy.isAllowed)

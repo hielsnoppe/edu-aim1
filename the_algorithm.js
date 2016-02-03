@@ -120,14 +120,6 @@ function combinations (activities) {
   });
 }
 
-function Schedule () {
-  //
-}
-
-Schedule.prototype.rank = function (description) {
-
-};
-
 function Activity () {
 
 }
