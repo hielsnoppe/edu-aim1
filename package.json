@@ -24,8 +24,10 @@
     "async": "^1.3.0",
     "body-parser": "^1.13.1",
     "bower": "^1.4.1",
+    "bvg-api": "git+https://github.com/kr1sp1n/bvg-api.git",
     "cfenv": "~1.0.0",
     "chalk": "^1.1.0",
+    "cheerio": "^0.19.0",
     "compression": "^1.5.0",
     "connect-flash": "~0.1.1",
     "connect-mongo": "~0.8.1",
@@ -48,6 +50,7 @@
     "mocha": "~1.20.0",
     "mongodb": "^2.1.4",
     "mongoose": "~4.2.3",
+    "mongoose-schema-extend": "^0.2.0",
     "morgan": "^1.6.1",
     "multer": "~1.0.5",
     "nodemailer": "^1.4.0",
@@ -64,6 +67,7 @@
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.3.7",
     "swig": "^1.4.2",
+    "synchronize": "^0.9.14",
     "touch": "^1.0.0",
     "validator": "^3.41.2"
   },
@@ -120,6 +124,7 @@
     "run-sequence": "^1.1.1",
     "should": "^7.0.1",
     "supertest": "^1.0.1",
+    "tv4": "^1.2.7",
     "yargs": "~3.30.0"
   }
 }

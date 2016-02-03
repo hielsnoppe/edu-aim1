@@ -1,0 +1,16 @@
+{
+  "type": "RestaurantActivity",
+
+  "properties": [
+    {
+      "weight": 5,
+      "name": "cuisine",
+      "values": [
+        {
+          "weight": 5,
+          "value": "Italian"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "startDateTime": "",
+  "startLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
+
+  "endDateTime": "",
+  "endLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
+
+  "activities": [
+    {
+      "options": [
+        {
+          "weight": 7,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Italian"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "weight": 5,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Lebanese"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "options": [
+        {
+          "weight": 10,
+          "type": "RestaurantActivity",
+          "properties": [
+            {
+              "weight": 5,
+              "name": "cuisine",
+              "values": [
+                {
+                  "weight": 5,
+                  "value": "Burgers"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "transportPreferences": {
+
+    "maximumWalkingDistance": {
+      "value": 1,
+      "unit": "km"
+    },
+    "maximumDuration": {
+      "value": 20,
+      "unit": "min"
+    }
+  }
+}
