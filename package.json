@@ -1,14 +1,14 @@
 {
-  "name": "meanjs",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
-  "version": "0.4.2",
+  "name": "niteout",
+  "description": "Semester project",
+  "version": "0.0.0",
   "meanjs-version": "0.4.2",
-  "private": false,
-  "author": "https://github.com/meanjs/mean/graphs/contributors",
+  "private": true,
+  "author": "https://github.com/hielsnoppe/edu-aim1/graphs/contributors",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/meanjs/mean.git"
+    "url": "https://github.com/hielsnoppe/edu-aim1.git"
   },
   "engines": {
     "node": ">=0.12.0",
@@ -52,6 +52,7 @@
     "mongoose": "~4.2.3",
     "mongoose-schema-extend": "^0.2.0",
     "morgan": "^1.6.1",
+    "moviedb": "^0.2.2",
     "multer": "~1.0.5",
     "nodemailer": "^1.4.0",
     "owasp-password-strength-test": "^1.3.0",

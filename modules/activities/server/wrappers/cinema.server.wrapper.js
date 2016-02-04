@@ -11,9 +11,17 @@ var path = require('path'),
 var request = require('request');
 var cheerio = require('cheerio');
 
+var apiKey = require('../../../../config/keys.js').moviedb;
+var mdb = require('moviedb')(apiKey);
+
 function wrapper () {}
 
-wrapper.extractItems = function (html) {
+/**
+ * @param String html
+ * @param callable next
+ */
+
+wrapper.extractItems = function (html, next) {
 
   var $ = cheerio.load(html);
 
@@ -22,26 +30,24 @@ wrapper.extractItems = function (html) {
     return [];
   }
 
-  var item = {
-    theater: {},
-    showings: []
-  };
-
   $('div.theater').each(function(i, element) {
 
     var desc = $(this).children('.desc');
 
-    item.theater.name = $(desc).children('.name').text();
-    item.theater.address = $(desc).children('.info').text();
+    var theater = {
+      name: $(desc).children('.name').text(),
+      address: $(desc).children('.info').text()
+    };
 
     var showtimes = $(this).children('.showtimes');
 
-    $(showtimes).find('.name').each(function(i, elem) {
+    $(showtimes).find('.name').each(function (i, elem) {
 
       var showing = {
         title: '',
         infos: '',
-        times: ''
+        times: '',
+        theater: theater
       };
 
       showing.title = $(this).text();
@@ -54,31 +60,49 @@ wrapper.extractItems = function (html) {
 
       showing.times = times.text();
 
-      console.log(showing);
-
-      // Save to DB
-
-      var movie = new CinemaActivity(showing);
-
-      movie.save(function (err) {
-        if (err) {
-
-        } else {
-
-        }
-      });
+      next(showing);
     });
   });
 };
 
 /**
+ *
+ */
+
+wrapper.itemHandler = function (item) {
+
+  // TODO Some cleanup
+
+  mdb.searchMovie({ query: item.title }, function(error, response) {
+
+    item.movie = response;
+  });
+
+  // Save to DB
+
+  var movie = new CinemaActivity(item);
+
+  movie.save(function (err) {
+
+    if (err) {
+
+      console.log(err);
+    } else {
+
+      console.log('Saved new CinemaActivity');
+    }
+  });
+};
+
+/**
+ *
  */
 
 wrapper.responseHandler = function (error, response, html) {
 
   if (!error && response.statusCode === 200) {
 
-    wrapper.extractItems(html);
+    wrapper.extractItems(html, this.itemHandler);
   }
 };
 
@@ -87,12 +111,12 @@ wrapper.responseHandler = function (error, response, html) {
  * This will likely get us blacklisted
  */
 
-wrapper.fetch = function () {
+wrapper.fetch = function (near) {
 
-  var near = 'Berlin';
+  near = near | 'Berlin';
   var baseurl = 'http://www.google.de/movies';
-  var params = {
 
+  var params = {
     near: near,
     start: 0
   };
@@ -104,7 +128,7 @@ wrapper.fetch = function () {
     request(util.makeurl(baseurl, params), this.responseHandler);
   }
 
-  return 'Done';
+  return true;
 };
 
 module.exports = wrapper;

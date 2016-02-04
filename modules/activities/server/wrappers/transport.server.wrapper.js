@@ -7,6 +7,8 @@ var path = require('path'),
   request = require('request'),
   util = require('../../../common/server/util.server.js');
 
+var apiKey = require('../../../../config/keys.js').transport;
+
 function wrapper () {}
 
 wrapper.extractItems = function (body) {
@@ -180,19 +182,19 @@ wrapper.responseHandler = function (error, response, body) {
 /**
  */
 
-wrapper.fetch = function (src, dest) {
+wrapper.fetch = function (origin, destination) {
 
   var baseurl = 'https://maps.googleapis.com/maps/api/directions/json';
   var params = {
-    origin: src,
-    destination: dest,
+    origin: origin,
+    destination: destination,
     mode: 'transit',
-    key: 'AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY'
+    key: apiKey
   };
 
   request.get(util.makeurl(baseurl, params), this.responseHandler);
 
-  return 'Done';
+  return true;
 };
 
 module.exports = wrapper;

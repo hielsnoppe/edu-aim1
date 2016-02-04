@@ -28,6 +28,9 @@ var CinemaActivitySchema = ActivitySchema.extend({
     type: String,
     default: '',
     trim: true
+  },
+  movie: {
+    type: Schema.Types.Mixed
   }
 });
 

@@ -122,9 +122,9 @@ exports.activityByID = function (req, res, next, id) {
  */
 exports.update = function (req, res) {
 
-  var result = movieWrapper.fetch();
+  var success = movieWrapper.fetch();
 
-  res.json(result);
+  res.json(success);
 };
 
 /**
