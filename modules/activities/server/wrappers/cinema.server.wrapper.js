@@ -3,27 +3,59 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  util = require('../../../common/server/util.server.js'),
+
+var
+  cheerio = require('cheerio'),
   mongoose = require('mongoose'),
-  CinemaActivity = mongoose.model('CinemaActivity');
+  moviedb = require('moviedb'),
+  path = require('path'),
+  request = require('request')
+  ;
 
-var request = require('request');
-var cheerio = require('cheerio');
+var
+  CinemaActivity = mongoose.model('CinemaActivity'),
+  keys = require('../../../../config/keys.js'),
+  util = require('../../../common/server/util.server.js')
+  ;
 
-var apiKey = require('../../../../config/keys.js').moviedb;
-var mdb = require('moviedb')(apiKey);
-
-function wrapper () {}
+var pipeline = {};
 
 /**
- * @param String html
- * @param callable next
+ * Retrieve movie showtimes by scraping Google
+ * This will likely get us blacklisted
  */
 
-wrapper.extractItems = function (html, next) {
+pipeline.fetch = function (near, next) {
 
-  var $ = cheerio.load(html);
+  function responseHandler (error, response, html) {
+
+    if (!error && response.statusCode === 200) {
+
+      next(html);
+    }
+  }
+
+  near = near || 'Berlin';
+  var baseurl = 'http://www.google.de/movies';
+
+  var params = {
+    near: near,
+    start: 0
+  };
+
+  for (var i = 0; i <= 70; i += 10) {
+
+    params.start = i;
+
+    request(util.makeurl(baseurl, params), responseHandler);
+  }
+
+  return true;
+};
+
+pipeline.extract = function (item, next) {
+
+  var $ = cheerio.load(item);
 
   if ($('div.theater').length === 0) {
 
@@ -46,7 +78,7 @@ wrapper.extractItems = function (html, next) {
       var showing = {
         title: '',
         infos: '',
-        times: '',
+        times: [],
         theater: theater
       };
 
@@ -56,29 +88,40 @@ wrapper.extractItems = function (html, next) {
 
       showing.infos = infos.text();
 
-      var times = $(infos).next() ;
+      //var times = $(infos).next() ;
+      //
+      //showing.times = times.text();
 
-      showing.times = times.text();
+      $(infos).next().find('> span').each(function (i, elem) {
+
+        showing.times.push($(this).text());
+      });
 
       next(showing);
     });
   });
 };
 
-/**
- *
- */
+pipeline.enrich = function (item, next) {
 
-wrapper.itemHandler = function (item) {
-
-  // TODO Some cleanup
+  var mdb = moviedb(keys.moviedb);
 
   mdb.searchMovie({ query: item.title }, function(error, response) {
 
     item.movie = response;
-  });
 
-  // Save to DB
+    // Save to DB
+    next(item);
+  });
+};
+
+pipeline.clean = function (item, next) {
+
+  console.log(item);
+  next(item);
+};
+
+pipeline.save = function (item, next) {
 
   var movie = new CinemaActivity(item);
 
@@ -89,46 +132,9 @@ wrapper.itemHandler = function (item) {
       console.log(err);
     } else {
 
-      console.log('Saved new CinemaActivity');
+      next(item);
     }
   });
 };
 
-/**
- *
- */
-
-wrapper.responseHandler = function (error, response, html) {
-
-  if (!error && response.statusCode === 200) {
-
-    wrapper.extractItems(html, this.itemHandler);
-  }
-};
-
-/**
- * Retrieve movie showtimes by scraping Google
- * This will likely get us blacklisted
- */
-
-wrapper.fetch = function (near) {
-
-  near = near | 'Berlin';
-  var baseurl = 'http://www.google.de/movies';
-
-  var params = {
-    near: near,
-    start: 0
-  };
-
-  for (var i = 0; i <= 70; i += 10) {
-
-    params.start = i;
-
-    request(util.makeurl(baseurl, params), this.responseHandler);
-  }
-
-  return true;
-};
-
-module.exports = wrapper;
+module.exports = pipeline;

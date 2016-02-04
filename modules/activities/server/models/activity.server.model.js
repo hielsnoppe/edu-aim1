@@ -31,6 +31,9 @@ var ActivitySchema = new Schema({
   endLocation: {
     coordinates: { type: [Number], index: '2dsphere' }
   }
+}, {
+  collection: 'activities',
+  discriminatorKey: '_type'
 });
 
 ActivitySchema.methods.rank = function rankActivity (cb) {

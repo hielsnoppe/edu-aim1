@@ -8,7 +8,7 @@ var path = require('path'),
   CinemaActivity = mongoose.model('CinemaActivity'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-var movieWrapper = require('../wrappers/cinema.server.wrapper');
+var cinemaWrapper = require('../wrappers/cinema.server.wrapper');
 var transportWrapper = require('../wrappers/transport.server.wrapper');
 
 var request = require('request');
@@ -17,6 +17,7 @@ var cheerio = require('cheerio');
 /**
  * Create a movie
  */
+
 exports.create = function (req, res) {
   var movie = new CinemaActivity(req.body);
   movie.user = req.user;
@@ -35,6 +36,7 @@ exports.create = function (req, res) {
 /**
  * Show the current movie
  */
+
 exports.read = function (req, res) {
   res.json(req.movie);
 };
@@ -42,6 +44,7 @@ exports.read = function (req, res) {
 /**
  * Update a movie
  */
+
 exports.update = function (req, res) {
   var movie = req.movie;
 
@@ -62,6 +65,7 @@ exports.update = function (req, res) {
 /**
  * Delete an movie
  */
+
 exports.delete = function (req, res) {
   var movie = req.movie;
 
@@ -79,6 +83,7 @@ exports.delete = function (req, res) {
 /**
  * List of Movies
  */
+
 exports.list = function (req, res) {
   CinemaActivity.find().sort('-created').populate('user', 'displayName').exec(function (err, movies) {
     if (err) {
@@ -120,16 +125,55 @@ exports.activityByID = function (req, res, next, id) {
 /**
  * Update activities
  */
+
 exports.update = function (req, res) {
 
-  var success = movieWrapper.fetch();
+  cinemaWrapper.fetch(function (item) {
+    cinemaWrapper.enrich(item, function (item) {
+      cinemaWrapper.clean(item, function (item) {
+        cinemaWrapper.save(item, function (item) {
 
-  res.json(success);
+          console.log(item);
+        });
+      });
+    });
+  });
+
+  res.json(true);
 };
+// */
+
+/**
+ *
+ * /
+
+exports.update = function (req, res) {
+
+  CinemaActivity.find({
+  })
+  .limit(1)
+  //.sort({ occupation: -1 })
+  //.select({ name: 1, occupation: 1 })
+  //.exec(this.itemHandler);
+  .exec(function (item) {
+    cinemaWrapper.enrich(item, function (item) {
+      cinemaWrapper.clean(item, function (item) {
+        cinemaWrapper.save(item, function (item) {
+
+          console.log(item);
+        });
+      });
+    });
+  });
+
+  res.json(true);
+};
+// */
 
 /**
  * Test transportation
  */
+
 exports.transport = function (req, res) {
 
   var src = req.params.src;
