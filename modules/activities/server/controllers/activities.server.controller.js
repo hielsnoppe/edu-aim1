@@ -3,16 +3,22 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
+
+var
+  cheerio = require('cheerio'),
   mongoose = require('mongoose'),
+  path = require('path'),
+  Q = require('q'),
+  request = require('request')
+  ;
+
+var
   CinemaActivity = mongoose.model('CinemaActivity'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  cinemaWrapper = require('../wrappers/cinema.server.wrapper'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  transportWrapper = require('../wrappers/transport.server.wrapper')
+  ;
 
-var cinemaWrapper = require('../wrappers/cinema.server.wrapper');
-var transportWrapper = require('../wrappers/transport.server.wrapper');
-
-var request = require('request');
-var cheerio = require('cheerio');
 
 /**
  * Create a movie
@@ -128,47 +134,22 @@ exports.activityByID = function (req, res, next, id) {
 
 exports.update = function (req, res) {
 
-  cinemaWrapper.fetch(function (item) {
-    cinemaWrapper.enrich(item, function (item) {
-      cinemaWrapper.clean(item, function (item) {
-        cinemaWrapper.save(item, function (item) {
+  cinemaWrapper.fetch('Berlin')
+    .then(cinemaWrapper.extract)
+    /*
+    .then(cinemaWrapper.enrich)
+    */
+    .then(cinemaWrapper.clean)
+    .then(cinemaWrapper.filter)
+    .then(cinemaWrapper.save)
+    .then(function (report) {
 
-          console.log(item);
-        });
-      });
-    });
-  });
+      console.log('done', report);
 
-  res.json(true);
+      res.json(report);
+    })
+    .done();
 };
-// */
-
-/**
- *
- * /
-
-exports.update = function (req, res) {
-
-  CinemaActivity.find({
-  })
-  .limit(1)
-  //.sort({ occupation: -1 })
-  //.select({ name: 1, occupation: 1 })
-  //.exec(this.itemHandler);
-  .exec(function (item) {
-    cinemaWrapper.enrich(item, function (item) {
-      cinemaWrapper.clean(item, function (item) {
-        cinemaWrapper.save(item, function (item) {
-
-          console.log(item);
-        });
-      });
-    });
-  });
-
-  res.json(true);
-};
-// */
 
 /**
  * Test transportation

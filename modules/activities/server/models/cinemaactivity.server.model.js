@@ -24,11 +24,11 @@ var CinemaActivitySchema = ActivitySchema.extend({
     default: '',
     trim: true
   },
-  times: [{
+  times: {
     type: String,
     default: '',
     trim: true
-  }],
+  },
   movie: {
     type: Schema.Types.Mixed
   }
