@@ -21,6 +21,15 @@ var
   ;
 
 /**
+ * Restrict results to only movies that are released
+ * in year1 or year2. Won't work on showings of old
+ * movies.
+ */
+var
+  year1 = 2015 ;
+  year2 = 2016 ; 
+
+/**
  * Retrieve movie showtimes by scraping Google
  * This will likely get us blacklisted
  */
@@ -151,34 +160,63 @@ exports.enrich = function (item) {
     else {
 
       // TODO do something with the response
-      var example = {
-        "page": 1,
-        "results": [
-          {
-            "backdrop_path": "/eSzpy96DwBujGFj0xMbXBcGcfxX.jpg",
-            "first_air_date": "2008-01-19",
-            "genre_ids": [
-              18
-            ],
-            "id": 1396,
-            "original_language": "en",
-            "original_name": "Breaking Bad",
-            "overview": "Breaking Bad is an American crime drama television series created and produced by Vince Gilligan. Set and produced in Albuquerque, New Mexico, Breaking Bad is the story of Walter White, a struggling high school chemistry teacher who is diagnosed with inoperable lung cancer at the beginning of the series. He turns to a life of crime, producing and selling methamphetamine, in order to secure his family's financial future before he dies, teaming with his former student, Jesse Pinkman. Heavily serialized, the series is known for positioning its characters in seemingly inextricable corners and has been labeled a contemporary western by its creator.",
-            "origin_country": [
-              "US"
-            ],
-            "poster_path": "/4yMXf3DW6oCL0lVPZaZM2GypgwE.jpg",
-            "popularity": 18.095686,
-            "name": "Breaking Bad",
-            "vote_average": 8.9,
-            "vote_count": 245
-          }
-        ],
-        "total_pages": 1,
-        "total_results": 1
-      };
+      // Example of the movie JSON
+      // {title: Genius
+      //  releaseDate: 2016-02-10
+      //  adult: false  *true if adult movie, else false*
+      //  plot: Adaptation of the award winning biography Max Perkins
+      //  runtime: 114  *in minutes*
+      //  genres: [{name: drama}]
+      //  countries: [{name: USA}]
+      //  director: Michael Grandage
+      //  cast: [{name: Colin Firth}, {name: Nicole Kidman}, ...]
+      // } 
+      var movie = {} ; // json object that will contain all infos
 
-      console.log(response);
+      for(var i=0; i <= response.results.length-1 ; i++) {
+        var date = response.results[i].release_date ;
+        if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
+          movie.title = response.results[i].title ;
+          movie.releaseDate = date ;
+         
+          movie_id = res.results[i].id ;
+          mdb.movieInfo({id: movie_id}, function(err, res){
+            movie.adult = res.adult ;
+            movie.plot = res.overview ;
+            movie.runtime = res.runtime ;
+
+            var genresArr = [] ;
+            for(var k=0; k <= res.genres.length-1 ; k++) {
+              genresArr.push({name: res.genres[k].name}) ;
+            }
+            movie.genres = genresArr ;
+
+            var countriesArr = [] ;
+            for(var m=0; m <= res.production_countries.length-1 ; m++) {
+              countriesArr.push({name: res.production_countries[m].name}) ;
+            }
+            movie.countries = countriesArr ;
+          });
+
+          mdb.movieCredits({id: movie_id}, function(err, res){
+            for(var n=0 ; n < res.crew.length ; n++) {
+              if(matchExact(res.crew[n].job,"Director")){
+                movie.director = res.crew[n].name ;
+                break ;
+              }
+            }
+
+            var castArr = [] ;
+            for(var j=0 ; j <= 4 ; j++) { // take the first 5 stars
+              castArr.push({name: res.cast[j].name}) ;
+            }
+            movie.cast = castArr ;  
+          });
+          break ; // only take the first result
+        } //end if
+      } // end for
+
+      console.log(JSON.stringify(movie));
 
       deferred.resolve(item);
     }
@@ -250,3 +288,8 @@ exports.save = function (items) {
     return deferred.promise;
   });
 };
+
+function matchExact(r, str) {
+   var match = str.match(r);
+   return match != null && str == match[0];
+}
