@@ -4,7 +4,7 @@ Restaurant Data
 cd restaurant
 npm install
 npm start
-========
+---------
 We have to provide: 
 1. key
 2. location
