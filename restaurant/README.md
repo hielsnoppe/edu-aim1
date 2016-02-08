@@ -1,12 +1,18 @@
-Restaurant Data
-
+Restaurant API
 ========
 
+Intall
+------------
 ``````
 cd restaurant
 npm install
+
+Run
+---------
 npm start
 ````````
+
+Input attributes
 ---------
 We have to provide: 
 1. key
@@ -14,12 +20,17 @@ We have to provide:
 3. radius
 4. keyword i.e cuisine
 
+After starting the server user has to open browser and provide following url with all the attributes. It will return a json file file all the information.
+
 ======
 Eg
 http://localhost/randeats?key=AIzaSyCzqQwN3OL3YdHoY-vD2OFbzGZECUeBfW4&location=52.5167,13.3833&radius=1000&keyword=chinese
 
 
 Output on console
+----------
+In console url and name, address and rating will printed for the restaurant
+
 https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyCzqQwN3OL3YdHoY-vD2OFbzGZECUeBfW4&location=52.5167%2C13.3833&radius=1000&sensor=false&types=restaurant&keyword=chinese
 Name:  CHINA CLUB BERLIN GMBH & CO. KG
 Address:  Behrenstraße 72, Berlin
