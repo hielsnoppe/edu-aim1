@@ -34,9 +34,9 @@ function callDir (src, dest, flag){
 }
 
 function getDirections (src, dest) {
-
+//region is now set on Germany Berlin. 
   request.get('https://maps.googleapis.com/maps/api/directions/json?origin=' + src +
-  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+  '&destination=' + dest + '&mode=transit&region=DE-BE&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
     function(error, response, body) {
 
       if (!error && response.statusCode == 200) {
