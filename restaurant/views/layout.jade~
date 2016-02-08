@@ -1,0 +1,8 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(rel='javascript', src='/javascripts/randeats.js')
+  body
+    block content
