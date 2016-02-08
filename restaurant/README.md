@@ -11,7 +11,7 @@ We have to provide:
 3. radius
 4. keyword i.e cuisine
 
-========
+======
 Eg
 http://localhost/randeats?key=AIzaSyCzqQwN3OL3YdHoY-vD2OFbzGZECUeBfW4&location=52.5167,13.3833&radius=1000&keyword=chinese
 
