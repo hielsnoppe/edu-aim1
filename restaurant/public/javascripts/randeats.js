@@ -7,7 +7,7 @@ function show_map(position) {
     var radius;
     var keyword;
 
-    $.get( "randeats", { key: "AIzaSyCzqQwN3OL3YdHoY-vD2OFbzGZECUeBfW4", location: latitude + "," + longitude, radius: radius, keyword: keyword })
+    $.get( "randeats", { location: latitude + "," + longitude, radius: radius, keyword: keyword })
 	.done(function(data) {
       console.log("Got results, updating main page.");
 	    console.log(data);
