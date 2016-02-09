@@ -8,7 +8,7 @@ exports.index = function(req, res){
 };
 
 exports.randeats = function(req, res){
-  var key = req.query.key;
+  var key = "AIzaSyCzqQwN3OL3YdHoY-vD2OFbzGZECUeBfW4";
   var location = encodeURIComponent(req.query.location);
   var radius = req.query.radius;
   var sensor = false;
@@ -46,7 +46,7 @@ exports.randeats = function(req, res){
           else
             console.log("Rating: ", places.results[i].rating);
           }
-          console.log(result);
+          console.log("Total Number of Restaurant: ", result);
 
         }
       }
