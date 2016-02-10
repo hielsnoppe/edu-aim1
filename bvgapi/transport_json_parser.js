@@ -220,7 +220,7 @@ function parseDirection(src, dest, json){
 
 function getDirections(src, dest, callback) {
   request.get('https://maps.googleapis.com/maps/api/directions/json?alternatives=true&origin=' + src +
-  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+  'Berlin&destination=' + dest + ',Berlin&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var direction_string = [];
