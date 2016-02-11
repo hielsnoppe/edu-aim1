@@ -20,7 +20,8 @@ module.exports = function (src, dest){
     },
     //*********To use it for console
     test: function(){
-      getDirections(src, dest, function(){
+      getDirections(src, dest, function(err, res){
+        console.log(res[0].direction);
       });
     },
     //*********To use it in other JS file, returns a JSON object with general details of the journey
@@ -67,29 +68,29 @@ function parseDirection(src, dest, json){
               });
               generalTransportInfo(generalData);
               direction_string.push("***********Route from " + src + " to " + dest + " in the time zone " + time_zone + "************");
-              console.log("***********Route from " + src + " to " + dest + " in the time zone " + time_zone + "************");
+              //console.log("***********Route from " + src + " to " + dest + " in the time zone " + time_zone + "************");
               //Displaying basic travel details
               direction_string.push("\n\t#####Your Journey Details#####");
-              console.log("\n\t#####Your Journey Details#####");
+              //console.log("\n\t#####Your Journey Details#####");
               direction_string.push("\tDeparture time from " + src + ": " + depart_time +
                 "\n\tArrival time at " + dest + ": " + arrival_time +
                 "\n\tDistance: " + distance +
                 "\n\tduration: " + duration);
-              console.log("\tDeparture time from " + src + ": " + depart_time +
-                "\n\tArrival time at " + dest + ": " + arrival_time +
-                "\n\tDistance: " + distance +
-                "\n\tduration: " + duration);
+              //console.log("\tDeparture time from " + src + ": " + depart_time +
+              //  "\n\tArrival time at " + dest + ": " + arrival_time +
+              // "\n\tDistance: " + distance +
+              //  "\n\tduration: " + duration);
               //console.log("LOGGING "+direction_string.length);
               //Fetching Directions
               if (typeof (json.routes[0].legs[0].steps) == 'undefined') {
                 direction_string.push("No Directions for the given source and destination");
-                console.log("No Directions for the given source and destination");
+                //console.log("No Directions for the given source and destination");
               } else {
                 //Printing directions until no steps left
                 var noStep = steps;
                 var steps_count = 1;
                 direction_string.push("\n\t---->Directions<----");
-                console.log("\n\t---->Directions<----");
+                //console.log("\n\t---->Directions<----");
                 for (var i = 0; i < steps.length; i++) {
 
                   //****It Works. Only if you want to parse the steps from JSON****
@@ -125,20 +126,20 @@ function parseDirection(src, dest, json){
                     "\n\tNumber of Stops: " + no_of_stops+
                     "\n\tLine: "+line_name+
                     "\n\tDirection: "+direction);
-                  console.log("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
-                    "\n\tInstruction: " + steps[i].html_instructions +
-                    "\n\tStart Location: " + steps[i].start_location.lat, steps[i].start_location.lng +
-                    "\n\tEnd Location: " + steps[i].end_location.lat, steps[i].end_location.lng +
-                    "\n\tDistance: " + steps[i].distance.text +
-                    "\n\tduration: " + steps[i].duration.text +
-                    "\n\tNumber of Stops: " + no_of_stops+
-                    "\n\tLine: "+line_name+
-                    "\n\tDirection: "+direction);
+                  //console.log("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
+                  //  "\n\tInstruction: " + steps[i].html_instructions +
+                  //  "\n\tStart Location: " + steps[i].start_location.lat, steps[i].start_location.lng +
+                  //  "\n\tEnd Location: " + steps[i].end_location.lat, steps[i].end_location.lng +
+                  //  "\n\tDistance: " + steps[i].distance.text +
+                  //  "\n\tduration: " + steps[i].duration.text +
+                  //  "\n\tNumber of Stops: " + no_of_stops+
+                  //  "\n\tLine: "+line_name+
+                  //  "\n\tDirection: "+direction);
                 }
               }
             } else {
               direction_string.push("***********Route from " + src + " to " + dest + "*************");
-              console.log("***********Route from " + src + " to " + dest + "*************");
+             // console.log("***********Route from " + src + " to " + dest + "*************");
               var duration = legs.duration.text;
               var distance = legs.distance.text;
               //Displaying basic travel details
@@ -146,15 +147,15 @@ function parseDirection(src, dest, json){
                 "\n\t@@ 'No transport available for this journey, so don't be lazy and start walking' @@"+
                 "\n\tDistance: " + distance +
                 "\n\tduration: " + duration);
-              console.log("\n\t#####Your Journey Details#####");
-              console.log("\n\t@@ 'No transport available for this journey, so don't be lazy and start walking' @@");
-              console.log("\n\tDistance: " + distance +
-                "\n\tduration: " + duration);
+              //console.log("\n\t#####Your Journey Details#####");
+              //console.log("\n\t@@ 'No transport available for this journey, so don't be lazy and start walking' @@");
+              //console.log("\n\tDistance: " + distance +
+                //"\n\tduration: " + duration);
 
               //Fetching Directions
               if (typeof (json.routes[0].legs[0].steps) == 'undefined') {
                 direction_string.push("No Directions for the given source and destination");
-                console.log("No Directions for the given source and destination");
+                //console.log("No Directions for the given source and destination");
                 
               } else {
                 //Printing directions until no steps left
@@ -195,13 +196,13 @@ function parseDirection(src, dest, json){
                     "\n\tDistance: " + steps[i].distance.text +
                     "\n\tduration: " + steps[i].duration.text +
                     "\n\tNumber of Stops: " + no_of_stops);
-                  console.log("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
+                  /*console.log("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
                     "\n\tInstruction: " + steps[i].html_instructions +
                     "\n\tStart Location: " + steps[i].start_location.lat, steps[i].start_location.lng +
                     "\n\tEnd Location: " + steps[i].end_location.lat, steps[i].end_location.lng +
                     "\n\tDistance: " + steps[i].distance.text +
                     "\n\tduration: " + steps[i].duration.text +
-                    "\n\tNumber of Stops: " + no_of_stops);
+                    "\n\tNumber of Stops: " + no_of_stops);*/
                 }
               }
             }
@@ -213,7 +214,7 @@ function parseDirection(src, dest, json){
             return allDet;
           } else {
             direction_string.push("Error!! Please enter different source and destination");
-            console.log("Error!! Please enter different source and destination");
+            //console.log("Error!! Please enter different source and destination");
             return direction_string
           }
 }
@@ -225,12 +226,12 @@ function getDirections(src, dest, callback) {
       if (!error && response.statusCode == 200) {
         var direction_string = [];
         direction_string.push("\nFetching the Directions....\n");
-        console.log("\nFetching the Directions....\n");
+        //console.log("\nFetching the Directions....\n");
         var json = JSON.parse(body);
 
         if (json.status == "NOT_FOUND") {
           direction_string.push("source or destination not found");
-          console.log("source or destination not found");
+          //console.log("source or destination not found");
         } else {
           var temp = parseDirection(src, dest, json);
 
