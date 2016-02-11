@@ -1,0 +1,27 @@
+{
+  "ActivityDescription":
+    {
+      "type": "StartingPoint",
+      "properties":
+        {
+          "weight": 10,
+          "name": "default",
+          "value": "true"
+        }
+    }
+  ,
+  "Activity": [
+    {
+      "type": "StartingPoint",
+      "name": "StartingPoint",
+      "default": [
+        "true"
+      ],
+      "aggregateRating": 10,
+      "location" : {
+               "lat" : 52.516382,
+               "lng" : 13.383893
+            }
+    }
+  ]
+}
