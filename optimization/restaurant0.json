@@ -1,0 +1,76 @@
+{
+  "ActivityDescription":
+    {
+      "type": "RestaurantActivity",
+      "properties":
+        {
+          "weight": 3.5,
+          "name": "cuisine",
+          "value": "Italian",
+          "maxWeight": 5
+        }
+    }
+  ,
+  "Activity": [
+    {
+      "type": "RestaurantActivity",
+      "name": "Hans im Glueck",
+      "cuisine": [
+        "Burgers"
+      ],
+      "aggregateRating": 5.0,
+      "location" : {
+               "lat" : 52.5149992,
+               "lng" : 13.3903492
+            }
+    },
+    {
+      "type": "RestaurantActivity",
+      "name": "Burger King",
+      "cuisine": [
+        "Burgers"
+      ],
+      "aggregateRating": 3.8,
+      "location" : {
+               "lat" : 52.5183651,
+               "lng" : 13.3889608
+            }
+    },
+    {
+      "type": "RestaurantActivity",
+      "name": "Vapiano",
+      "cuisine": [
+        "Italian"
+      ],
+      "aggregateRating": 3.6,
+      "location" : {
+               "lat" : 52.5173447,
+               "lng" : 13.3858522
+            }
+    },
+    {
+      "type": "RestaurantActivity",
+      "name": "Trattoria del Corso",
+      "cuisine": [
+        "Italian"
+      ],
+      "aggregateRating": 4.3,
+      "location" : {
+               "lat" : 52.51549110000001,
+               "lng" : 13.379177
+            }
+    },
+    {
+      "type": "RestaurantActivity",
+      "name": "Boussi Falafel",
+      "cuisine": [
+        "Lebanese"
+      ],
+      "aggregateRating": 4.7,
+      "location" : {
+               "lat" : 52.51575099999999,
+               "lng" : 13.378966
+            }
+    }
+  ]
+}

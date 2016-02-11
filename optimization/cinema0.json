@@ -1,0 +1,103 @@
+{
+  "ActivityDescription":
+    {
+      "type": "CinemaActivity",
+      "properties":
+        {
+          "weight": 7,
+          "name": "genre",
+          "value": "Drama",
+          "maxWeight": 10
+        }
+    }
+  ,
+  "Activity": [
+    {
+      "type": "CinemaActivity",
+      "name": "Legend",
+      "genre": [
+        "Biography",
+        "Crime",
+        "Drama",
+        "Romance",
+        "Thriller"
+      ],
+      "aggregateRating": 6.1,
+      "location" : {
+               "lat" : 52.515956,
+               "lng" : 13.388512
+            }
+    },
+    {
+      "type": "CinemaActivity",
+      "name": "Alvin und die Chipmunks: Road Chip",
+      "genre": [
+        "Animation",
+        "Adventure",
+        "Comedy",
+        "Family",
+        "Fantasy",
+        "Music"
+      ],
+      "aggregateRating": 4.1,
+      "location" : {
+               "lat" : 52.5139474,
+               "lng" : 13.3787126
+            }
+    },
+    {
+      "type": "CinemaActivity",
+      "name": "Star Wars: Das Erwachen der Macht",
+      "genre": [
+        "Action",
+        "Adventure",
+        "Fantasy",
+        "Sci-Fi"
+      ],
+      "aggregateRating": 8.4,
+      "location" : {
+               "lat" : 52.51862020000001,
+               "lng" : 13.3761871
+            }
+    },
+    {
+      "type": "CinemaActivity",
+      "name": "The Big Short",
+      "genre": [
+        "Biography",
+        "Drama"
+      ],
+      "aggregateRating": 7.9,
+      "location" : {
+               "lat" : 52.5159877,
+               "lng" : 13.3868572
+            }
+    },
+    {
+      "type": "CinemaActivity",
+      "name": "James Bond 007 - Spectre",
+      "genre": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "aggregateRating": 7.0
+    },
+    {
+      "type": "CinemaActivity",
+      "name": "The Hateful 8",
+      "genre": [
+        "Crime",
+        "Drama",
+        "Mystery",
+        "Thriller",
+        "Western"
+      ],
+      "aggregateRating": 8.0,
+      "location" : {
+               "lat" : 52.520892,
+               "lng" : 13.38921
+            }
+    }
+  ]
+}
