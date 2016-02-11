@@ -14,6 +14,14 @@ var restaurant = require("./restaurant0.json");
 var initialPoint = require("./initial.json");
 var theater = require("./theater.json");
 
+//Checking
+
+var transport = require('../bvgapi/transport_json_parser.js')("wedding", "Hansaplatz");
+transport.getTransInfo(function(err, directionInfo) {
+  console.log("here "+directionInfo[0].duration);
+  //travelTime = directionInfo[0].duration;
+});
+
 //Separate activities and descriptions into different arrays
 activities.push(initialPoint.Activity);
 activities.push(cinema.Activity);
@@ -99,7 +107,14 @@ function createGraph(activityType, index, array){
         filteredActivities.forEach(function(Destiny){
           if(Destiny.type===array[index+1]){
             destiny = Destiny.activityID;
+            var stOrigin = Origin.location.lat+","+Origin.location.lng;
+            var stDestiny = Destiny.location.lat+","+Destiny.location.lng;
             travelTime = fakeTravelTime(Origin.location, Destiny.location, '0:00');
+            /*var transport = require('../bvgapi/transport_json_parser.js')(stOrigin, stDestiny);
+            transport.getTransInfo(function(err, directionInfo) {
+              console.log("here "+directionInfo);
+              //travelTime = directionInfo[0].duration;
+            });*/
             Destiny.parent.push(origin);
             Origin.child.push(destiny);
             Destiny.leaf=true;
