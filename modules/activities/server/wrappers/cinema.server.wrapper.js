@@ -26,8 +26,8 @@ var
  * movies.
  */
 var
-  year1 = 2015 ;
-  year2 = 2016 ; 
+  year1 = 2015,
+  year2 = 2016;
 
 /**
  * Retrieve movie showtimes by scraping Google
@@ -128,14 +128,6 @@ exports.extract = function (items) {
 
           results.push(_.cloneDeep(result));
         });
-        /*
-        .find('> span').each(function (i, elem) {
-
-          result.time = $(this).text();
-
-          results.push(_.cloneDeep(result));
-        });
-        */
       });
     });
 
@@ -170,55 +162,51 @@ exports.enrich = function (item) {
       //  countries: [{name: USA}]
       //  director: Michael Grandage
       //  cast: [{name: Colin Firth}, {name: Nicole Kidman}, ...]
-      // } 
+      // }
+
       var movie = {} ; // json object that will contain all infos
 
-      for(var i=0; i <= response.results.length-1 ; i++) {
-        var date = response.results[i].release_date ;
-        if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
-          movie.title = response.results[i].title ;
-          movie.releaseDate = date ;
-         
-          movie_id = res.results[i].id ;
-          mdb.movieInfo({id: movie_id}, function(err, res){
-            movie.adult = res.adult ;
-            movie.plot = res.overview ;
-            movie.runtime = res.runtime ;
+      response.results.forEach(function (res) {
 
-            var genresArr = [] ;
-            for(var k=0; k <= res.genres.length-1 ; k++) {
-              genresArr.push({name: res.genres[k].name}) ;
-            }
-            movie.genres = genresArr ;
+        var movie = {
+          title: res.title,
+          externalID: res.id,
+          releaseDate: res.release_date,
 
-            var countriesArr = [] ;
-            for(var m=0; m <= res.production_countries.length-1 ; m++) {
-              countriesArr.push({name: res.production_countries[m].name}) ;
-            }
-            movie.countries = countriesArr ;
-          });
+          adult: false,
+          plot: '',
+          runtime: 0,
+          genres: [],
+          countries: [],
 
-          mdb.movieCredits({id: movie_id}, function(err, res){
-            for(var n=0 ; n < res.crew.length ; n++) {
-              if(matchExact(res.crew[n].job,"Director")){
-                movie.director = res.crew[n].name ;
-                break ;
-              }
-            }
+          director: '',
+          cast: []
+        };
 
-            var castArr = [] ;
-            for(var j=0 ; j <= 4 ; j++) { // take the first 5 stars
-              castArr.push({name: res.cast[j].name}) ;
-            }
-            movie.cast = castArr ;  
-          });
-          break ; // only take the first result
-        } //end if
-      } // end for
+        if (
+          movie.releaseDate.indexOf(year1) === -1 &&
+          movie.releaseDate.indexOf(year2) === -1
+        ) return null;
 
-      console.log(JSON.stringify(movie));
+        mdb.movieInfo({ id: movie.externalID }, function (err, res) {
 
-      deferred.resolve(item);
+          movie.adult = res.adult;
+          movie.plot = res.overview;
+          movie.runtime = res.runtime;
+          movie.genres = res.genres;
+          movie.countries = res.countries;
+        });
+
+        mdb.movieCredits({ id: movie.externalID }, function (err, res) {
+
+          movie.cast = res.cast;
+          movie.director = res.crew.filter(function (member) {
+            return member.job === 'Director';
+          })[0];
+        });
+      });
+
+      deferred.resolve(movie);
     }
   });
 
@@ -289,7 +277,9 @@ exports.save = function (items) {
   });
 };
 
-function matchExact(r, str) {
-   var match = str.match(r);
-   return match != null && str == match[0];
+function matchExact (r, str) {
+
+  var match = str.match(r);
+
+  return match !== null && str === match[0];
 }

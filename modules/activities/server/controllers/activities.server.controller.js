@@ -136,9 +136,7 @@ exports.update = function (req, res) {
 
   cinemaWrapper.fetch('Berlin')
     .then(cinemaWrapper.extract)
-    /*
-    .then(cinemaWrapper.enrich)
-    */
+    //.then(cinemaWrapper.enrich)
     .then(cinemaWrapper.clean)
     .then(cinemaWrapper.filter)
     .then(cinemaWrapper.save)
