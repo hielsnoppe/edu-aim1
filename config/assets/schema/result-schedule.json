@@ -1,0 +1,90 @@
+{
+
+  "activities": [
+
+    {
+      "sequenceNo": "1",
+      "type": "TransportActivity",
+      "startDateTime": "YYYYMMDDHHMM",
+      "startLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      },
+      "endDateTime": "YYYYMMDDHHMM",
+      "endLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    },
+
+    {
+      "sequenceNo": "2",
+      "type": "RestaurantActivity",
+      "name": "Burger Temple",
+      "cuisine": "American",
+      "startDateTime": "YYYYMMDDHHMM",
+      "endDateTime": "YYYYMMDDHHMM",
+      "location": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    },
+
+    {
+      "sequenceNo": "3",
+      "type": "TransportActivity",
+      "startDateTime": "YYYYMMDDHHMM",
+      "startLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      },
+      "endDateTime": "YYYYMMDDHHMM",
+      "endLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    },
+
+    {
+      "sequenceNo": "4",
+      "type": "CinemaActivity",
+      "title": "James Bond",
+      "cinemaName": "Cinemaxxx",
+      "startDateTime": "YYYYMMDDHHMM",
+      "endDateTime": "YYYYMMDDHHMM",
+      "location": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    },
+
+    {
+      "sequenceNo": "5",
+      "type": "TransportActivity",
+      "startDateTime": "YYYYMMDDHHMM",
+      "startLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      },
+      "endDateTime": "YYYYMMDDHHMM",
+      "endLocation": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    },
+
+    {
+      "sequenceNo": "4",
+      "type": "TheaterActivity",
+      "title": "Phantom der Oper",
+      "thaterName": "Deutsche Oper",
+      "startDateTime": "YYYYMMDDHHMM",
+      "endDateTime": "YYYYMMDDHHMM",
+      "location": {
+        "latitude": 0.0,
+        "longitude": 0.0
+      }
+    }
+  ]
+
+}
