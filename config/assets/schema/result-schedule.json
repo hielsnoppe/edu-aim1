@@ -75,7 +75,7 @@
 
     {
       "sequenceNo": "4",
-      "type": "TheaterActivity",
+      "type": "TheatreActivity",
       "title": "Phantom der Oper",
       "thaterName": "Deutsche Oper",
       "startTime": "HHMM",
