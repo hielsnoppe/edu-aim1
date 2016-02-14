@@ -1,0 +1,103 @@
+{
+  "ActivityDescription":
+    {
+      "type": "TheaterActivity",
+      "properties":
+        {
+          "weight": 8,
+          "name": "genre",
+          "value": "Comedy",
+          "maxWeight": 10
+        }
+    }
+  ,
+  "Activity": [
+    {
+      "type": "TheaterActivity",
+      "name": "Legend",
+      "genre": [
+        "Biography",
+        "Crime",
+        "Drama",
+        "Romance",
+        "Thriller"
+      ],
+      "aggregateRating": 6.1,
+      "location" : {
+               "lat" : 52.515956,
+               "lng" : 13.388512
+            }
+    },
+    {
+      "type": "TheaterActivity",
+      "name": "Alvin und die Chipmunks: Road Chip",
+      "genre": [
+        "Animation",
+        "Adventure",
+        "Comedy",
+        "Family",
+        "Fantasy",
+        "Music"
+      ],
+      "aggregateRating": 8.1,
+      "location" : {
+               "lat" : 52.5139474,
+               "lng" : 13.3787126
+            }
+    },
+    {
+      "type": "TheaterActivity",
+      "name": "Star Wars: Das Erwachen der Macht",
+      "genre": [
+        "Action",
+        "Adventure",
+        "Fantasy",
+        "Sci-Fi"
+      ],
+      "aggregateRating": 7.4,
+      "location" : {
+               "lat" : 52.51862020000001,
+               "lng" : 13.3761871
+            }
+    },
+    {
+      "type": "TheaterActivity",
+      "name": "The Big Short",
+      "genre": [
+        "Biography",
+        "Drama"
+      ],
+      "aggregateRating": 8.9,
+      "location" : {
+               "lat" : 52.5159877,
+               "lng" : 13.3868572
+            }
+    },
+    {
+      "type": "TheaterActivity",
+      "name": "James Bond 007 - Spectre",
+      "genre": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "aggregateRating": 7.0
+    },
+    {
+      "type": "TheaterActivity",
+      "name": "The Hateful 8",
+      "genre": [
+        "Crime",
+        "Drama",
+        "Mystery",
+        "Thriller",
+        "Western"
+      ],
+      "aggregateRating": 6.0,
+      "location" : {
+               "lat" : 52.520892,
+               "lng" : 13.38921
+            }
+    }
+  ]
+}

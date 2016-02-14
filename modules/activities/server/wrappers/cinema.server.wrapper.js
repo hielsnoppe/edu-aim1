@@ -91,7 +91,7 @@ exports.extract = function (items) {
 
     var results = [];
     var result = {
-      infos: '',
+      //infos: '',
       time: '',
       date: item.date,
       theater: {
@@ -118,7 +118,7 @@ exports.extract = function (items) {
 
         var infos = $(this).next() ;
 
-        result.infos = infos.text();
+        //result.infos = infos.text();
 
         var times = $(infos).next().text().trim().split(/\s+/);
 
