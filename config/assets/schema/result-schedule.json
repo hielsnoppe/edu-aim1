@@ -1,16 +1,16 @@
 {
-
+  "date": "YYYYMMDD",
   "activities": [
 
     {
       "sequenceNo": "1",
       "type": "TransportActivity",
-      "startDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
       "startLocation": {
         "latitude": 0.0,
         "longitude": 0.0
       },
-      "endDateTime": "YYYYMMDDHHMM",
+      "endTime": "HHMM",
       "endLocation": {
         "latitude": 0.0,
         "longitude": 0.0
@@ -22,8 +22,8 @@
       "type": "RestaurantActivity",
       "name": "Burger Temple",
       "cuisine": "American",
-      "startDateTime": "YYYYMMDDHHMM",
-      "endDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
+      "endTime": "HHMM",
       "location": {
         "latitude": 0.0,
         "longitude": 0.0
@@ -33,12 +33,12 @@
     {
       "sequenceNo": "3",
       "type": "TransportActivity",
-      "startDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
       "startLocation": {
         "latitude": 0.0,
         "longitude": 0.0
       },
-      "endDateTime": "YYYYMMDDHHMM",
+      "endTime": "HHMM",
       "endLocation": {
         "latitude": 0.0,
         "longitude": 0.0
@@ -50,8 +50,8 @@
       "type": "CinemaActivity",
       "title": "James Bond",
       "cinemaName": "Cinemaxxx",
-      "startDateTime": "YYYYMMDDHHMM",
-      "endDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
+      "endTime": "HHMM",
       "location": {
         "latitude": 0.0,
         "longitude": 0.0
@@ -61,12 +61,12 @@
     {
       "sequenceNo": "5",
       "type": "TransportActivity",
-      "startDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
       "startLocation": {
         "latitude": 0.0,
         "longitude": 0.0
       },
-      "endDateTime": "YYYYMMDDHHMM",
+      "endTime": "HHMM",
       "endLocation": {
         "latitude": 0.0,
         "longitude": 0.0
@@ -78,8 +78,8 @@
       "type": "TheaterActivity",
       "title": "Phantom der Oper",
       "thaterName": "Deutsche Oper",
-      "startDateTime": "YYYYMMDDHHMM",
-      "endDateTime": "YYYYMMDDHHMM",
+      "startTime": "HHMM",
+      "endTime": "HHMM",
       "location": {
         "latitude": 0.0,
         "longitude": 0.0
