@@ -57,9 +57,12 @@ activityTypeList.forEach(createGraph);
 //console.log(activitiesGraphNodes);
 
 //Create Schedules by traversing the Tree-like structure from leaves to root
-console.log('Creating Schedules by traversing the Tree-like structure from leaves to root');
+console.log("Create Schedules by traversing the Tree-like structure from leaves to root");
 activitiesGraphEdges.forEach(createWeightedSchedule);
 console.log(activitiesSchedules);
+
+//Select the best schedule by gain/cost ratio
+//var selection = optimizer(activitiesSchedules);
 
 //Functions
 
@@ -198,4 +201,11 @@ function nomalizeRating(node){
     return (item.type===node.type);
   });
   return(node.aggregateRating/actDescription.properties.maxWeight);
+}
+
+//Fucntion selectSchedule
+function optimizer(arr){
+  var schedule = 0;
+
+  return schedule;
 }

@@ -1,8 +1,10 @@
 var path = require('path'),
-  fs = require('fs');
-  request = require('request');
-  direction_string = [];
-  generalData = [];
+  fs = require('fs'),
+  request = require('request'),
+  direction_string = [],
+  generalData = [],
+  direction_JSON = [];
+
 
 
 //Please use 'direction' to use it in other js file or use 'test' to print on command prompt
@@ -11,11 +13,10 @@ module.exports = function (src, dest){
     //********To use it in other JS file, returns a string with all the directions
     direction: function(cb){
       getDirections(src, dest, function(err, res){
-        //console.log("\n\tDisplaying General Info:\n \t Arrival Time: "+generalData[0].arrival_time+" \n\t Departure Time"+generalData[0].departure_time);
         if(err){
           console.log(err);
         }
-        cb(err, res[0].direction);
+          cb(err, res[0].directionJSON);
        });
     },
     //*********To use it for console
@@ -27,11 +28,10 @@ module.exports = function (src, dest){
     //*********To use it in other JS file, returns a JSON object with general details of the journey
     getTransInfo: function(cb){
       getDirections(src, dest, function(err, res){
-        //console.log("\n\tDisplaying General Info:\n \t Arrival Time: "+generalData[0].arrival_time+" \n\t Departure Time"+generalData[0].departure_time);
         if(err){
           console.log(err);
         }
-        cb(err, res[0].genDetails);
+          cb(err, res[0].genDetails[0]);
        });
     }
   }
@@ -117,6 +117,18 @@ function parseDirection(src, dest, json){
                   var no_of_stops = (typeof (steps[i].transit_details) !== 'undefined') ? steps[i].transit_details.num_stops : 'Not Applicable';
                   var line_name = (typeof (steps[i].transit_details) !== 'undefined')? steps[i].transit_details.line.short_name : 'Not Applicable';
                   var direction = (typeof (steps[i].transit_details) !== 'undefined')? steps[i].transit_details.headsign : 'Not Applicable';
+                  direction_JSON.push({
+                    "step": (i + 1),
+                    "travel_mode": steps[i].travel_mode,
+                    "instructions": steps[i].html_instructions,
+                    "start_location": steps[i].start_location.lat+", "+steps[i].start_location.lng,
+                    "end_location": steps[i].end_location.lat+", "+steps[i].end_location.lng,
+                    "distance": steps[i].distance.text,
+                    "duration": steps[i].duration.text,
+                    "num_stops": no_of_stops,
+                    "line": line_name,
+                    "direction": direction
+                  });
                   direction_string.push("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
                     "\n\tInstruction: " + steps[i].html_instructions +
                     "\n\tStart Location: " + steps[i].start_location.lat, steps[i].start_location.lng +
@@ -189,6 +201,18 @@ function parseDirection(src, dest, json){
                   var no_of_stops = (typeof (steps[i].transit_details) !== 'undefined') ? steps[i].transit_details.num_stops : 'Not Applicable'
                   var line_name = (typeof (steps[i].transit_details) !== 'undefined')? steps[i].transit_details.line.short_name : 'Not Applicable';
                   var direction = (typeof (steps[i].transit_details) !== 'undefined')? steps[i].transit_details.headsign : 'Not Applicable';
+                     direction_JSON.push({
+                    "step": (i + 1),
+                    "travel_mode": steps[i].travel_mode,
+                    "instructions": steps[i].html_instructions,
+                    "start_location": steps[i].start_location.lat+", "+steps[i].start_location.lng,
+                    "end_location": steps[i].end_location.lat+", "+steps[i].end_location.lng,
+                    "distance": steps[i].distance.text,
+                    "duration": steps[i].duration.text,
+                    "num_stops": no_of_stops,
+                    "line": line_name,
+                    "direction": direction
+                  });
                   direction_string.push("\n\tStep" + (i + 1) + ":\n\tTravel Mode: " + steps[i].travel_mode +
                     "\n\tInstruction: " + steps[i].html_instructions +
                     "\n\tStart Location: " + steps[i].start_location.lat, steps[i].start_location.lng +
@@ -208,8 +232,9 @@ function parseDirection(src, dest, json){
             }
             returnDir(direction_string);
             allDet.push({
-              "direction": direction_string,
-              "genDetails": generalData
+              "directionString": direction_string,
+              "genDetails": generalData,
+              "directionJSON": direction_JSON
             });
             return allDet;
           } else {

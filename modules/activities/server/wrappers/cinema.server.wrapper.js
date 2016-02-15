@@ -20,6 +20,11 @@ var
   util = require('../../../common/server/util.server.js')
   ;
 
+// GPS variables
+var geocoderProvider = 'openstreetmap';
+var httpAdapter = 'http';
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter);
+
 /**
  * Restrict results to only movies that are released
  * in year1 or year2. Won't work on showings of old
@@ -89,9 +94,14 @@ exports.extract = function (item) {
     //infos: '',
     time: '',
     date: item.date,
+    startLocation: '',
     theater: {
       name: '',
-      address: ''
+      address: '',
+      location: {
+        latitude: 0.0,
+        longitude: 0.0
+      }
     },
     movie: {
       title: ''
@@ -104,6 +114,13 @@ exports.extract = function (item) {
 
     result.theater.name = $(desc).children('.name').text();
     result.theater.address = $(desc).children('.info').text();
+
+    // convert to geo coordinates
+    geocoder.geocode(result.theater.address, function(error, location) {
+
+      result.theater.location.latitude = location.latitude;
+      result.theater.location.longitude = location.longitude;
+    });
 
     var showtimes = $(this).children('.showtimes');
 
@@ -149,6 +166,7 @@ exports.enrich = function (item) {
       // Example of the movie JSON
       // {title: Genius
       //  releaseDate: 2016-02-10
+      // rating: 6.8
       //  adult: false  *true if adult movie, else false*
       //  plot: Adaptation of the award winning biography Max Perkins
       //  runtime: 114  *in minutes*
@@ -166,6 +184,7 @@ exports.enrich = function (item) {
           title: res.title,
           externalID: res.id,
           releaseDate: res.release_date,
+          aggregateRating: res.vote_average,
 
           adult: false,
           plot: '',
