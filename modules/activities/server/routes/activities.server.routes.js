@@ -4,19 +4,29 @@
  * Module dependencies.
  */
 var activitiesPolicy = require('../policies/activities.server.policy'),
-  activities = require('../controllers/activities.server.controller');
+  activities = require('../controllers/activities.server.controller'),
+  schedules = require('../controllers/schedules.server.controller');
 
 module.exports = function (app) {
-  // Activities collection routes
-  app.route('/api/activities').all(activitiesPolicy.isAllowed)
-    .get(activities.list)
-    .post(activities.create);
 
-  app.route('/api/activities/update')
-    .get(activities.update);
+  // Activities collection routes
+  app.route('/api/activities/:type')
+    .get(activities.find);
+
+  app.route('/api/fetch/cinemas')
+    .get(activities.cinema);
+
+  app.route('/api/fetch/restaurants')
+    .get(activities.restaurant);
 
   app.route('/api/activities/transport/:src/:dest')
     .get(activities.transport);
+
+  app.route('/api/descriptions')
+    .get(activities.specifications);
+
+  app.route('/api/schedules')
+    .get(schedules.calculate);
 
   /*
   // Single movie routes

@@ -1,0 +1,25 @@
+{
+  "name": "CinemaActivity",
+  "description": "A human readable description of this type of activity",
+
+  "properties": {
+    "cuisine": {
+      "type": "string",
+      "enum": [
+        "Italian",
+        "French",
+        "Chinese",
+        "other"
+      ],
+      "_comment": "require list contains"
+    },
+    "aggregateRating": {
+      "name": "restaurantRating",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "reverse": false,
+      "_comment": "require minimum"
+    }
+  }
+}

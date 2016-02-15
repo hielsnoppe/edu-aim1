@@ -20,3 +20,10 @@ function makeurl (baseurl, params) {
 
   return url;
 }
+
+function matchExact (r, str) {
+
+  var match = str.match(r);
+
+  return match !== null && str === match[0];
+}

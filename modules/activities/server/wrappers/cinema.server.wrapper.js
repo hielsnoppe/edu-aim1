@@ -31,13 +31,8 @@ var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter);
  * movies.
  */
 var
-  year1 = 2015 ;
-  year2 = 2016 ; 
-
-/**
- * Retrieve movie showtimes by scraping Google
- * This will likely get us blacklisted
- */
+  year1 = 2015,
+  year2 = 2016;
 
 function responseHandler (response) {
 
@@ -53,6 +48,8 @@ function responseHandler (response) {
 }
 
 exports.fetch = function (near) {
+
+  console.log('fetch');
 
   near = near || 'Berlin';
 
@@ -80,99 +77,88 @@ exports.fetch = function (near) {
   return Q.all(results);
 };
 
-exports.extract = function (items) {
+exports.extract = function (item) {
 
-  console.log('extract', items.length);
+  console.log('extract', item);
 
-  return items.map(function (item) {
+  // Exit if required properties are missing
+  if (!item.html || !item.date) return [];
 
-    // Exit if required properties are missing
-    if (!item.html || !item.date) return [];
+  var $ = cheerio.load(item.html);
 
-    var $ = cheerio.load(item.html);
+  // Exit if there is no information
+  if ($('div.theater').length === 0) return [];
 
-    // Exit if there is no information
-    if ($('div.theater').length === 0) return [];
-
-    var results = [];
-    var result = {
-      //infos: '',
-      time: '',
-      date: item.date,
-      theater: {
-        name: '',
-        address: '',
-        geo_location: {
-          latitude: '',
-          longitude: ''
-        }
-      },
-      movie: {
-        title: ''
+  var results = [];
+  var result = {
+    //infos: '',
+    time: '',
+    date: item.date,
+    startLocation: '',
+    theater: {
+      name: '',
+      address: '',
+      location: {
+        latitude: 0.0,
+        longitude: 0.0
       }
-    };
+    },
+    movie: {
+      title: ''
+    }
+  };
 
-    $('div.theater').each(function(i, element) {
+  $('div.theater').each(function(i, element) {
 
-      var desc = $(this).children('.desc');
+    var desc = $(this).children('.desc');
 
-      result.theater.name = $(desc).children('.name').text();
-      var address = $(desc).children('.info').text();
-      result.theater.address = address ;
+    result.theater.name = $(desc).children('.name').text();
+    result.theater.address = $(desc).children('.info').text();
 
-      //convert to geo coordinates
-      geocoder.geocode(address, function(err, res) {
-        var loc = res[0] ;
-        result.theater.geo_location.latitude = loc.latitude ;
-        result.theater.geo_location.longitude = loc.longitude ;
-      });
+    // convert to geo coordinates
+    geocoder.geocode(result.theater.address, function(error, location) {
 
-      var showtimes = $(this).children('.showtimes');
-
-      $(showtimes).find('.name').each(function (i, elem) {
-
-        result.movie.title = $(this).text();
-
-        var infos = $(this).next() ;
-
-        //result.infos = infos.text();
-
-        var times = $(infos).next().text().trim().split(/\s+/);
-
-        times.forEach(function (time) {
-
-          result.time = time;
-
-          results.push(_.cloneDeep(result));
-        });
-        /*
-        .find('> span').each(function (i, elem) {
-
-          result.time = $(this).text();
-
-          results.push(_.cloneDeep(result));
-        });
-        */
-      });
+      result.theater.location.latitude = location.latitude;
+      result.theater.location.longitude = location.longitude;
     });
 
-    return results;
-  }).reduce(function(a, b) {
+    var showtimes = $(this).children('.showtimes');
 
-    return a.concat(b);
-  }, []);
+    $(showtimes).find('.name').each(function (i, elem) {
+
+      result.movie.title = $(this).text();
+
+      var infos = $(this).next() ;
+
+      //result.infos = infos.text();
+
+      var times = $(infos).next().text().trim().split(/\s+/);
+
+      times.forEach(function (time) {
+
+        result.time = time;
+
+        results.push(_.cloneDeep(result));
+      });
+    });
+  });
+
+  return results;
 };
 
 exports.enrich = function (item) {
 
+  console.log('enrich');
+
+  var results = [];
   var mdb = moviedb(keys.moviedb);
-  var deferred = Q.defer();
 
   mdb.searchMovie({ query: item.movie.title }, function (error, response) {
 
     if (error) {
 
-      deferred.reject(new Error(error));
+      //deferred.reject(new Error(error));
+      console.log(error);
     }
     else {
 
@@ -188,127 +174,144 @@ exports.enrich = function (item) {
       //  countries: [{name: USA}]
       //  director: Michael Grandage
       //  cast: [{name: Colin Firth}, {name: Nicole Kidman}, ...]
-      // } 
+      // }
 
-      for(var i=0; i <= response.results.length-1 ; i++) {
-        var date = response.results[i].release_date ;
-        if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
-          //item.movie.title = response.results[i].title ;
-          item.movie.releaseDate = date ;
-          item.movie.rating = response.results[i].vote_average ;
-          movie_id = res.results[i].id ;
-          mdb.movieInfo({id: movie_id}, function(err, res){
-            item.movie.adult = res.adult ;
-            item.movie.plot = res.overview ;
-            item.movie.runtime = res.runtime ;
+      var movie = {} ; // json object that will contain all infos
 
-            var genresArr = [] ;
-            for(var k=0; k <= res.genres.length-1 ; k++) {
-              genresArr.push({name: res.genres[k].name}) ;
-            }
-            item.movie.genres = genresArr ;
+      response.results.forEach(function (res) {
 
-            var countriesArr = [] ;
-            for(var m=0; m <= res.production_countries.length-1 ; m++) {
-              countriesArr.push({name: res.production_countries[m].name}) ;
-            }
-            item.movie.countries = countriesArr ;
-          });
+        var movie = {
+          title: res.title,
+          externalID: res.id,
+          releaseDate: res.release_date,
+          aggregateRating: res.vote_average,
 
-          mdb.movieCredits({id: movie_id}, function(err, res){
-            for(var n=0 ; n < res.crew.length ; n++) {
-              if(matchExact(res.crew[n].job,"Director")){
-                item.movie.director = res.crew[n].name ;
-                break ;
-              }
-            }
+          adult: false,
+          plot: '',
+          runtime: 0,
+          genres: [],
+          countries: [],
 
-            var castArr = [] ;
-            for(var j=0 ; j <= 4 ; j++) { // take the first 5 stars
-              if(res.cast[j]){
-                castArr.push({name: res.cast[j].name}) ;
-              }
-            }
-            item.movie.cast = castArr ;  
-          });
-          break ; // only take the first result
-        } //end if
-      } // end for
+          director: '',
+          cast: []
+        };
 
-      console.log(JSON.stringify(item.movie));
+        if (
+          movie.releaseDate.indexOf(year1) === -1 &&
+          movie.releaseDate.indexOf(year2) === -1
+        ) return null;
 
-      deferred.resolve(item);
+        mdb.movieInfo({ id: movie.externalID }, function (err, res) {
+
+          movie.adult = res.adult;
+          movie.plot = res.overview;
+          movie.runtime = res.runtime;
+          movie.genres = res.genres;
+          movie.countries = res.countries;
+        });
+
+        mdb.movieCredits({ id: movie.externalID }, function (err, res) {
+
+          movie.cast = res.cast;
+          movie.director = res.crew.filter(function (member) {
+            return member.job === 'Director';
+          })[0];
+        });
+      });
+
+      results.push(movie);
+    }
+  });
+
+  return results;
+};
+
+exports.clean = function (item) {
+
+  console.log('clean');
+
+  var time = item.time.trim();
+  var parts = time.split(':');
+
+  if (time === '' || parts.length !== 2) return null;
+
+  // Compute a proper date as startTime
+
+  var startTime = new Date();
+  startTime.setTime(item.date);
+  startTime.setHours(parts[0]);
+  startTime.setMinutes(parts[1]);
+  startTime.setSeconds(0);
+  startTime.setMilliseconds(0);
+
+  var result = {
+    startTime: startTime,
+    title: item.title,
+    movie: item.movie
+  };
+
+  return result;
+};
+
+exports.filter = function (item) {
+
+  console.log('filter');
+
+  if (item === null) return [];
+
+  return item;
+};
+
+exports.save = function (item) {
+
+  console.log('save');
+
+  var movie = new CinemaActivity(item);
+  var deferred = Q.defer();
+
+  movie.save(function (error) {
+
+    if (error) {
+
+      //deferred.reject(new Error(error));
+      deferred.resolve(error);
+    }
+    else {
+
+      deferred.resolve(movie);
     }
   });
 
   return deferred.promise;
 };
 
-exports.clean = function (items) {
+exports.find = function (activityDescription) {
 
-  console.log('clean', items.length);
+  var query = {}; // make from activityDescription
 
-  return items.map(function (item) {
+  for (var property in activityDescription.properties) {
 
-    var time = item.time.trim();
-    var parts = time.split(':');
+    var propertyDescription = activityDescription.properties[property];
 
-    if (time === '' || parts.length !== 2) return null;
+    if (propertyDescription.hasOwnProperty('weight')) {}
 
-    // Compute a proper date as startTime
+    if (propertyDescription.hasOwnProperty('minimumValue')) {
 
-    var startTime = new Date();
-    startTime.setTime(item.date);
-    startTime.setHours(parts[0]);
-    startTime.setMinutes(parts[1]);
-    startTime.setSeconds(0);
-    startTime.setMilliseconds(0);
+      query[property] = {
+        $gt: propertyDescription.minimumValue
+      };
+    }
+    else if (propertyDescription.hasOwnProperty('values')) {
 
-    var result = {
-      startTime: startTime,
-      title: item.title,
-      movie: item.movie
-    };
+      for (var val in propertyDescription.values) {
 
-    return result;
-  });
-};
+        query[property] = val;
 
-exports.filter = function (items) {
-
-  console.log('filter', items.length);
-
-  return items.filter(function (item, index, array) {
-
-    return (item !== null);
-  });
-};
-
-exports.save = function (items) {
-
-  return items.map(function (item) {
-
-    var movie = new CinemaActivity(item);
-    var deferred = Q.defer();
-
-    movie.save(function (error) {
-
-      if (error) {
-
-        //deferred.reject(new Error(error));
-        deferred.resolve(error);
+        // FIXME This neglects all but the first value!
+        break;
       }
-      else {
+    }
+  }
 
-        deferred.resolve(movie);
-      }
-    });
-
-    return deferred.promise;
-  });
+  return CinemaActivity.find(query);
 };
-
-function matchExact(r, str) {
-   var match = str.match(r);
-   return match != null && str == match[0];
-}

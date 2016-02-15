@@ -13,22 +13,12 @@ var ActivitySchema = require('./activity.server.model.js').schema;
  * Movie Schema
  */
 var CinemaActivitySchema = ActivitySchema.extend({
-  time: {
-    type: Date,
-    default: Date.now,
-    trim: true
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-    trim: true
-  },
   theater: {
     name: {
       type: String,
       default: '',
-      trim: true,
-      required: 'Name cannot be blank'
+      //required: 'Name cannot be blank',
+      trim: true
     },
     address: {
       type: String,
@@ -52,8 +42,13 @@ var CinemaActivitySchema = ActivitySchema.extend({
     title: {
       type: String,
       default: '',
-      trim: true,
-      required: 'Title cannot be blank'
+      //required: 'Title cannot be blank',
+      trim: true
+    },
+    aggregateRating: {
+      type: Number,
+      default: 0.0
+      //required: 'Must have a rating'
     },
     releaseDate: {
       type: Date,
@@ -80,26 +75,32 @@ var CinemaActivitySchema = ActivitySchema.extend({
       default: 0,
       trim: true
     },
-    genres: [ {name : {
-                type: String,
-                default: '',
-                trim: true
-             }}],
-    countries: [ {name : {
-                type: String,
-                default: '',
-                trim: true
-                }}],
+    genres: [ {
+      name : {
+        type: String,
+        default: '',
+        trim: true
+      }
+    }],
+    countries: [ {
+      name : {
+        type: String,
+        default: '',
+        trim: true
+      }
+    }],
     director: {
       type: String,
       default: '',
       trim: true
     },
-    cast: [ {name : {
-                type: String,
-                default: '',
-                trim: true
-          }}]
+    cast: [ {
+      name : {
+        type: String,
+        default: '',
+        trim: true
+      }
+    }]
   }
 });
 
