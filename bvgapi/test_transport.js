@@ -22,6 +22,3 @@ if(src===null || dest ===null){
 function callGen(src, dest, cb){
 	transport.getTransInfo(cb);
 }
-
-
-

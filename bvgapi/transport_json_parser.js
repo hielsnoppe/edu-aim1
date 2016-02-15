@@ -5,7 +5,7 @@ var path = require('path'),
   generalData = [];
 
 
-//Please use 'direction' to use it in other js file or use 'test' to print on command prompt 
+//Please use 'direction' to use it in other js file or use 'test' to print on command prompt
 module.exports = function (src, dest){
   return{
     //********To use it in other JS file, returns a string with all the directions
@@ -20,20 +20,8 @@ module.exports = function (src, dest){
     },
     //*********To use it for console
     test: function(){
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       getDirections(src, dest, function(err, res){
         console.log(res[0].direction);
-=======
-      getDirections(src, dest, function(){
->>>>>>> Stashed changes
-=======
-      getDirections(src, dest, function(){
->>>>>>> Stashed changes
-=======
-      getDirections(src, dest, function(){
->>>>>>> Stashed changes
       });
     },
     //*********To use it in other JS file, returns a JSON object with general details of the journey
@@ -168,7 +156,7 @@ function parseDirection(src, dest, json){
               if (typeof (json.routes[0].legs[0].steps) == 'undefined') {
                 direction_string.push("No Directions for the given source and destination");
                 //console.log("No Directions for the given source and destination");
-                
+
               } else {
                 //Printing directions until no steps left
                 var noStep = steps;
@@ -226,81 +214,34 @@ function parseDirection(src, dest, json){
             return allDet;
           } else {
             direction_string.push("Error!! Please enter different source and destination");
-<<<<<<< Updated upstream
             //console.log("Error!! Please enter different source and destination");
-=======
-            console.log("Error!! Please enter different source and destination");
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             return direction_string
           }
 }
 
 function getDirections(src, dest, callback) {
   request.get('https://maps.googleapis.com/maps/api/directions/json?alternatives=true&origin=' + src +
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   'Berlin&destination=' + dest + ',Berlin&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
-=======
-  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
->>>>>>> Stashed changes
-=======
-  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
->>>>>>> Stashed changes
-=======
-  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
->>>>>>> Stashed changes
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var direction_string = [];
         direction_string.push("\nFetching the Directions....\n");
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         //console.log("\nFetching the Directions....\n");
-=======
-        console.log("\nFetching the Directions....\n");
->>>>>>> Stashed changes
-=======
-        console.log("\nFetching the Directions....\n");
->>>>>>> Stashed changes
-=======
-        console.log("\nFetching the Directions....\n");
->>>>>>> Stashed changes
         var json = JSON.parse(body);
 
         if (json.status == "NOT_FOUND") {
           direction_string.push("source or destination not found");
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
           //console.log("source or destination not found");
-=======
-          console.log("source or destination not found");
->>>>>>> Stashed changes
-=======
-          console.log("source or destination not found");
->>>>>>> Stashed changes
-=======
-          console.log("source or destination not found");
->>>>>>> Stashed changes
         } else {
           var temp = parseDirection(src, dest, json);
 
           callback(null,temp);
         }
       } else {
-        
+
         direction_string.push("Error! " + error);
         console.log("Error! " + error);
         callback(error);
       }
     });
 }
-
