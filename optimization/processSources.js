@@ -23,6 +23,7 @@ transport.getTransInfo(function(err, directionInfo) {
 });
 
 //Separate activities and descriptions into different arrays
+console.log('Separate Activities and Descriptions');
 activities.push(initialPoint.Activity);
 activities.push(cinema.Activity);
 activities.push(theater.Activity);
@@ -35,23 +36,26 @@ activitiesDescription.push(restaurant.ActivityDescription);
 
 //Create the chronologically ordered list of activity types
 activitiesDescription.forEach(listActivityTypes);
-console.log(activityTypeList);
-//console.log('Filter Activities and Descriptions');
+//console.log(activityTypeList);
 
+console.log('Filter Activities and Descriptions');
 //Filter activities, by user preferences
 activitiesDescription.forEach(filterActivities);
-console.log(filteredActivities);
+//console.log(filteredActivities);
 
+console.log("Adding Tree Properties");
 //Create Tree properties in filtered activities
 filteredActivities.forEach(addTreeProperties);
 //console.log(filteredActivities);
 
 //Combine activities chronologically into a Graph-alike structure
+console.log("Combining activities chronologically into a Graph-alike structure");
 activityTypeList.forEach(createGraph);
-console.log(activitiesGraphEdges);
+//console.log(activitiesGraphEdges);
 //console.log(activitiesGraphNodes);
 
 //Create Schedules by traversing the Tree-like structure from leaves to root
+console.log("Creating Schedules by traversing the Tree-like structure from leaves to root");
 activitiesGraphEdges.forEach(createWeightedSchedule);
 console.log(activitiesSchedules);
 

@@ -91,7 +91,7 @@ exports.extract = function (items) {
 
     var results = [];
     var result = {
-      infos: '',
+      //infos: '',
       time: '',
       date: item.date,
       theater: {
@@ -118,7 +118,7 @@ exports.extract = function (items) {
 
         var infos = $(this).next() ;
 
-        result.infos = infos.text();
+        //result.infos = infos.text();
 
         var times = $(infos).next().text().trim().split(/\s+/);
 
@@ -171,52 +171,53 @@ exports.enrich = function (item) {
       //  director: Michael Grandage
       //  cast: [{name: Colin Firth}, {name: Nicole Kidman}, ...]
       // } 
-      var movie = {} ; // json object that will contain all infos
 
       for(var i=0; i <= response.results.length-1 ; i++) {
         var date = response.results[i].release_date ;
         if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
-          movie.title = response.results[i].title ;
-          movie.releaseDate = date ;
+          //item.movie.title = response.results[i].title ;
+          item.movie.releaseDate = date ;
          
           movie_id = res.results[i].id ;
           mdb.movieInfo({id: movie_id}, function(err, res){
-            movie.adult = res.adult ;
-            movie.plot = res.overview ;
-            movie.runtime = res.runtime ;
+            item.movie.adult = res.adult ;
+            item.movie.plot = res.overview ;
+            item.movie.runtime = res.runtime ;
 
             var genresArr = [] ;
             for(var k=0; k <= res.genres.length-1 ; k++) {
               genresArr.push({name: res.genres[k].name}) ;
             }
-            movie.genres = genresArr ;
+            item.movie.genres = genresArr ;
 
             var countriesArr = [] ;
             for(var m=0; m <= res.production_countries.length-1 ; m++) {
               countriesArr.push({name: res.production_countries[m].name}) ;
             }
-            movie.countries = countriesArr ;
+            item.movie.countries = countriesArr ;
           });
 
           mdb.movieCredits({id: movie_id}, function(err, res){
             for(var n=0 ; n < res.crew.length ; n++) {
               if(matchExact(res.crew[n].job,"Director")){
-                movie.director = res.crew[n].name ;
+                item.movie.director = res.crew[n].name ;
                 break ;
               }
             }
 
             var castArr = [] ;
             for(var j=0 ; j <= 4 ; j++) { // take the first 5 stars
-              castArr.push({name: res.cast[j].name}) ;
+              if(res.cast[j]){
+                castArr.push({name: res.cast[j].name}) ;
+              }
             }
-            movie.cast = castArr ;  
+            item.movie.cast = castArr ;  
           });
           break ; // only take the first result
         } //end if
       } // end for
 
-      console.log(JSON.stringify(movie));
+      console.log(JSON.stringify(item.movie));
 
       deferred.resolve(item);
     }
