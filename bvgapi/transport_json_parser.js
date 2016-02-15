@@ -20,8 +20,12 @@ module.exports = function (src, dest){
     },
     //*********To use it for console
     test: function(){
+<<<<<<< Updated upstream
       getDirections(src, dest, function(err, res){
         console.log(res[0].direction);
+=======
+      getDirections(src, dest, function(){
+>>>>>>> Stashed changes
       });
     },
     //*********To use it in other JS file, returns a JSON object with general details of the journey
@@ -214,24 +218,40 @@ function parseDirection(src, dest, json){
             return allDet;
           } else {
             direction_string.push("Error!! Please enter different source and destination");
+<<<<<<< Updated upstream
             //console.log("Error!! Please enter different source and destination");
+=======
+            console.log("Error!! Please enter different source and destination");
+>>>>>>> Stashed changes
             return direction_string
           }
 }
 
 function getDirections(src, dest, callback) {
   request.get('https://maps.googleapis.com/maps/api/directions/json?alternatives=true&origin=' + src +
+<<<<<<< Updated upstream
   'Berlin&destination=' + dest + ',Berlin&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+=======
+  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+>>>>>>> Stashed changes
     function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var direction_string = [];
         direction_string.push("\nFetching the Directions....\n");
+<<<<<<< Updated upstream
         //console.log("\nFetching the Directions....\n");
+=======
+        console.log("\nFetching the Directions....\n");
+>>>>>>> Stashed changes
         var json = JSON.parse(body);
 
         if (json.status == "NOT_FOUND") {
           direction_string.push("source or destination not found");
+<<<<<<< Updated upstream
           //console.log("source or destination not found");
+=======
+          console.log("source or destination not found");
+>>>>>>> Stashed changes
         } else {
           var temp = parseDirection(src, dest, json);
 
