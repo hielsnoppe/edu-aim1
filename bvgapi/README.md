@@ -31,8 +31,34 @@ Parsing JSON from Google Transport API
       
   });
   ```
-
-
+* To get the directions of the journey
+	- Usage
+	```javascript 
+	transport.direction(function(err, directionInfo){
+		//your code goes here
+		});
+	```
+	- Properties exposed: 
+	 	```javascript 
+						  "step",//Number of the step
+                    "travel_mode",//Transit or walking
+                    "instructions",//Instructions
+                    "start_location",//lat and long in string format
+                    "end_location",//lat and long in string format
+                    "distance",//distance in KMs
+                    "duration",//duration in minutes
+                    "num_stops",//number of stops in case of transit
+                    "line",//name of the line in case of transit
+                    "direction"//direction of the transit. ex. "towards westbahnof"
+                    ```
+	- Example
+	```javascript
+		transport.direction(function(err, directionInfo){
+		console.log("\n\t ##########Directions########## \n\t Total Number of Steps: "+directionInfo.length+
+			"\n\t Step Number: "+directionInfo[0].step+
+			"\n\t Travel Mode: "+ directionInfo[0].travel_mode);
+	});
+```
 * To print it in console
 
   - use `node test_transport.js [source] [destination] [key]`. 
