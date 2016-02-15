@@ -1,24 +1,26 @@
+'use strict';
+
 //Arrays to manage activities
-var activities = new Array(); //Only activities and its description
-var activitiesDescription = new Array(); //Only descriptions, means user preferences
-var filteredActivities = new Array(); //Temp Array with filtered activities by user preferences
-var activityTypeList = new Array(); //Chonologically ordered type of activity to be done
-var activitiesGraphEdges = new Array(); //Steps chronologically ordered in a edges of graph-like structure
-var activitiesGraphNodes = new Array(); //Steps chronologically ordered in a nodes of graph-like structure
+var activities = []; //Only activities and its description
+var activitiesDescription = []; //Only descriptions, means user preferences
+var filteredActivities = []; //Temp Array with filtered activities by user preferences
+var activityTypeList = []; //Chonologically ordered type of activity to be done
+var activitiesGraphEdges = []; //Steps chronologically ordered in a edges of graph-like structure
+var activitiesGraphNodes = []; //Steps chronologically ordered in a nodes of graph-like structure
 var activityID = 0; //Counter for the activities, works as ID
-var activitiesSchedules = new Array(); //Combinations chronologically ordered
+var activitiesSchedules = []; //Combinations chronologically ordered
 
 //Read Sources
-var cinema = require("./cinema0.json");
-var restaurant = require("./restaurant0.json");
-var initialPoint = require("./initial.json");
-var theater = require("./theater.json");
+var cinema = require('./cinema0.json');
+var restaurant = require('./restaurant0.json');
+var initialPoint = require('./initial.json');
+var theater = require('./theater.json');
 
 //Checking
 
-var transport = require('../bvgapi/transport_json_parser.js')("wedding", "Hansaplatz");
+var transport = require('../bvgapi/transport_json_parser.js')('wedding', 'Hansaplatz');
 transport.getTransInfo(function(err, directionInfo) {
-  console.log("here "+directionInfo[0].duration);
+  console.log('here '+directionInfo[0].duration);
   //travelTime = directionInfo[0].duration;
 });
 
@@ -43,19 +45,19 @@ console.log('Filter Activities and Descriptions');
 activitiesDescription.forEach(filterActivities);
 //console.log(filteredActivities);
 
-console.log("Adding Tree Properties");
+console.log('Adding Tree Properties');
 //Create Tree properties in filtered activities
 filteredActivities.forEach(addTreeProperties);
 //console.log(filteredActivities);
 
 //Combine activities chronologically into a Graph-alike structure
-console.log("Combining activities chronologically into a Graph-alike structure");
+console.log('Combining activities chronologically into a Graph-alike structure');
 activityTypeList.forEach(createGraph);
 //console.log(activitiesGraphEdges);
 //console.log(activitiesGraphNodes);
 
 //Create Schedules by traversing the Tree-like structure from leaves to root
-console.log("Creating Schedules by traversing the Tree-like structure from leaves to root");
+console.log('Creating Schedules by traversing the Tree-like structure from leaves to root');
 activitiesGraphEdges.forEach(createWeightedSchedule);
 console.log(activitiesSchedules);
 
@@ -81,21 +83,21 @@ function filterActivities(element, index, array){
         //element.activityID = activityID;
         filteredActivities.push(element);
       }
-    })
+    });
   });
-};
+}
 
 //2.0 Extract chronologically the activity types
 function listActivityTypes(element, index, array){
   activityTypeList.push(element.type);
-};
+}
 //Fake function to get a travel time
 function fakeTravelTime(origin, destiny, time){
-  console.log("From: "+origin.lat+','+origin.lng);
-  console.log("To: "+destiny.lat+','+destiny.lng);
-  console.log("At: "+time);
+  console.log('From: '+origin.lat+','+origin.lng);
+  console.log('To: '+destiny.lat+','+destiny.lng);
+  console.log('At: '+time);
   return (Math.round(45*Math.random()));
-};
+}
 
 //Create Tree-like structure
 function createGraph(activityType, index, array){
@@ -106,17 +108,17 @@ function createGraph(activityType, index, array){
     filteredActivities.forEach(function(Origin){
       if(Origin.type===array[index]){
         var origin = Origin.activityID;
-        var destiny = "";
+        var destiny = '';
         var travelTime = 0;
         filteredActivities.forEach(function(Destiny){
           if(Destiny.type===array[index+1]){
             destiny = Destiny.activityID;
-            var stOrigin = Origin.location.lat+","+Origin.location.lng;
-            var stDestiny = Destiny.location.lat+","+Destiny.location.lng;
+            var stOrigin = Origin.location.lat+','+Origin.location.lng;
+            var stDestiny = Destiny.location.lat+','+Destiny.location.lng;
             travelTime = fakeTravelTime(Origin.location, Destiny.location, '0:00');
             /*var transport = require('../bvgapi/transport_json_parser.js')(stOrigin, stDestiny);
             transport.getTransInfo(function(err, directionInfo) {
-              console.log("here "+directionInfo);
+              console.log('here '+directionInfo);
               //travelTime = directionInfo[0].duration;
             });*/
             Destiny.parent.push(origin);
@@ -130,11 +132,11 @@ function createGraph(activityType, index, array){
       }
     });
   }
-};
+}
 
 //Function to insert tree properties to the
 function addTreeProperties(element){
-  if(element.type==="StartingPoint"){
+  if(element.type==='StartingPoint'){
     element.root=true;
     element.parent=[];
     element.child=[];
@@ -152,13 +154,13 @@ function addTreeProperties(element){
 function insertActivity(obj){
   var obj2=JSON.parse(JSON.stringify(obj));
   return obj2;
-};
+}
 
 //Create Schedules with weight
 function createWeightedSchedule(element, index, array){
   var normRating = 0;
   var step = activityTypeList.length - 1;
-  var thisSchedule = new Array();
+  var thisSchedule = [];
   var nextNode = element.origin;
   var node = filteredActivities.find(function(item){
     return (item.activityID===element.destiny);
@@ -188,7 +190,7 @@ function createWeightedSchedule(element, index, array){
       activitiesSchedules.push(thisSchedule.reverse());
   }
   //cleaning Schedule
-};
+}
 
 //Function to normalize the raiting
 function nomalizeRating(node){
@@ -196,4 +198,4 @@ function nomalizeRating(node){
     return (item.type===node.type);
   });
   return(node.aggregateRating/actDescription.properties.maxWeight);
-};
+}
