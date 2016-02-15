@@ -10,8 +10,8 @@ Parsing JSON from Google Transport API
       });
       ```
 
-   - For example,
-     
+   - Example,
+     -
          ```javascript 
           var transport = require('./transport_json_parser.js')(src, dest, key);
 
@@ -31,8 +31,9 @@ Parsing JSON from Google Transport API
       
   });
   ```
-* To get the directions of the journey
+* TO get the directions of the journey
 	- Usage
+	-
 	```javascript 
 	transport.direction(function(err, directionInfo){
 		//your code goes here
@@ -40,15 +41,24 @@ Parsing JSON from Google Transport API
 	```
 	- Properties exposed: 
 	 	```javascript 
-						  "step",//Number of the step
+		    "step",//Number of the step
+		    
                     "travel_mode",//Transit or walking
+                    
                     "instructions",//Instructions
+                    
                     "start_location",//lat and long in string format
+                    
                     "end_location",//lat and long in string format
+                    
                     "distance",//distance in KMs
+                    
                     "duration",//duration in minutes
+                    
                     "num_stops",//number of stops in case of transit
+                    
                     "line",//name of the line in case of transit
+                    
                     "direction"//direction of the transit. ex. "towards westbahnof"
                     ```
 	- Example
@@ -58,16 +68,17 @@ Parsing JSON from Google Transport API
 			"\n\t Step Number: "+directionInfo[0].step+
 			"\n\t Travel Mode: "+ directionInfo[0].travel_mode);
 	});
-```
+	```
 * To print it in console
 
-  - use `node test_transport.js [source] [destination] [key]`. 
-  - For example, `node test_transport.js wedding alexanderplatz XXXXXyBCroIiU9zWXaFXXXXXXXXXXXXXXXXXXXX`
+  - use `node test_transport.js [source] [destination]`. 
+  - For example, `node test_transport.js wedding alexanderplatz`
   - Output in the form:
 
-`Fetching the Directions....`
+```console
+Fetching the Directions....
 
-`***********Route from wedding to Leopoldplatz in the time zone Europe/Berlin************`
+***********Route from wedding to Leopoldplatz in the time zone Europe/Berlin************
 
        ` #####Your Journey Details#####
         Departure time from wedding: 2:57pm
@@ -109,7 +120,7 @@ Parsing JSON from Google Transport API
         Number of Stops: Not Applicable
         Line: Not Applicable
         Direction: Not Applicable
-
+```
         <<<<<<<General Details from Test_Transport>>>>>>>
          Departure Time: 2:57pm
          Arrival Time: 3:04pm`
