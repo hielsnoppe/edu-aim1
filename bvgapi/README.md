@@ -1,17 +1,16 @@
 # Google Transport API JSON Parser
 Parsing JSON from Google Transport API
 
-* TO use it in another JS file for example to get general information about the journey
-   - 
+## TO use it in another JS file for example to get general information about the journey
+  * Usage
    ```javascript 
         var transport = require('./transport_json_parser.js')(src, dest, key);
-        transport.getTransInfo(function(err, directionInfo) {`
-          `//Your code goes here`
+        transport.getTransInfo(function(err, directionInfo) {
+         //Your code goes here
       });
       ```
 
-   - Example,
-     -
+   * Example,
          ```javascript 
           var transport = require('./transport_json_parser.js')(src, dest, key);
 
@@ -31,45 +30,39 @@ Parsing JSON from Google Transport API
       
   });
   ```
-* TO get the directions of the journey
-	- Usage
-	-
+
+## TO get the directions of the journey
+
+	* Usage
 	```javascript 
 	transport.direction(function(err, directionInfo){
 		//your code goes here
 		});
 	```
-	- Properties exposed: 
-	 	```javascript 
-		    "step",//Number of the step
-		    
-                    "travel_mode",//Transit or walking
-                    
-                    "instructions",//Instructions
-                    
-                    "start_location",//lat and long in string format
-                    
-                    "end_location",//lat and long in string format
-                    
-                    "distance",//distance in KMs
-                    
-                    "duration",//duration in minutes
-                    
-                    "num_stops",//number of stops in case of transit
-                    
-                    "line",//name of the line in case of transit
-                    
-                    "direction"//direction of the transit. ex. "towards westbahnof"
-                    ```
-	- Example
+	* Properties exposed:
 	```javascript
+		"step",//Number of the step
+                    "travel_mode",//Transit or walking
+                    "instructions",//Instructions
+                    "start_location",//lat and long in string format
+	            "end_location",//lat and long in string format
+		    "distance",//distance in KMs
+                    "duration",//duration in minutes
+                    "num_stops",//number of stops in case of transit
+                    "line",//name of the line in case of transit
+                    "direction"//direction of the transit. ex. 'towards westbahnof'
+           ```
+	* Example,
+	```javascript
+		var transport = require('./transport_json_parser.js')(src, dest, key);
 		transport.direction(function(err, directionInfo){
 		console.log("\n\t ##########Directions########## \n\t Total Number of Steps: "+directionInfo.length+
 			"\n\t Step Number: "+directionInfo[0].step+
 			"\n\t Travel Mode: "+ directionInfo[0].travel_mode);
-	});
-	```
-* To print it in console
+			});
+			```
+	
+## To print it in console
 
   - use `node test_transport.js [source] [destination]`. 
   - For example, `node test_transport.js wedding alexanderplatz`
