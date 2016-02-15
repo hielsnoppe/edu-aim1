@@ -20,6 +20,11 @@ var
   util = require('../../../common/server/util.server.js')
   ;
 
+// GPS variables
+var geocoderProvider = 'openstreetmap';
+var httpAdapter = 'http';
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter);
+
 /**
  * Restrict results to only movies that are released
  * in year1 or year2. Won't work on showings of old
@@ -91,12 +96,16 @@ exports.extract = function (items) {
 
     var results = [];
     var result = {
-      infos: '',
+      //infos: '',
       time: '',
       date: item.date,
       theater: {
         name: '',
-        address: ''
+        address: '',
+        geo_location: {
+          latitude: '',
+          longitude: ''
+        }
       },
       movie: {
         title: ''
@@ -108,7 +117,15 @@ exports.extract = function (items) {
       var desc = $(this).children('.desc');
 
       result.theater.name = $(desc).children('.name').text();
-      result.theater.address = $(desc).children('.info').text();
+      var address = $(desc).children('.info').text();
+      result.theater.address = address ;
+
+      //convert to geo coordinates
+      geocoder.geocode(address, function(err, res) {
+        var loc = res[0] ;
+        result.theater.geo_location.latitude = loc.latitude ;
+        result.theater.geo_location.longitude = loc.longitude ;
+      });
 
       var showtimes = $(this).children('.showtimes');
 
@@ -118,7 +135,7 @@ exports.extract = function (items) {
 
         var infos = $(this).next() ;
 
-        result.infos = infos.text();
+        //result.infos = infos.text();
 
         var times = $(infos).next().text().trim().split(/\s+/);
 
@@ -163,6 +180,7 @@ exports.enrich = function (item) {
       // Example of the movie JSON
       // {title: Genius
       //  releaseDate: 2016-02-10
+      // rating: 6.8
       //  adult: false  *true if adult movie, else false*
       //  plot: Adaptation of the award winning biography Max Perkins
       //  runtime: 114  *in minutes*
@@ -171,52 +189,53 @@ exports.enrich = function (item) {
       //  director: Michael Grandage
       //  cast: [{name: Colin Firth}, {name: Nicole Kidman}, ...]
       // } 
-      var movie = {} ; // json object that will contain all infos
 
       for(var i=0; i <= response.results.length-1 ; i++) {
         var date = response.results[i].release_date ;
         if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
-          movie.title = response.results[i].title ;
-          movie.releaseDate = date ;
-         
+          //item.movie.title = response.results[i].title ;
+          item.movie.releaseDate = date ;
+          item.movie.rating = response.results[i].vote_average ;
           movie_id = res.results[i].id ;
           mdb.movieInfo({id: movie_id}, function(err, res){
-            movie.adult = res.adult ;
-            movie.plot = res.overview ;
-            movie.runtime = res.runtime ;
+            item.movie.adult = res.adult ;
+            item.movie.plot = res.overview ;
+            item.movie.runtime = res.runtime ;
 
             var genresArr = [] ;
             for(var k=0; k <= res.genres.length-1 ; k++) {
               genresArr.push({name: res.genres[k].name}) ;
             }
-            movie.genres = genresArr ;
+            item.movie.genres = genresArr ;
 
             var countriesArr = [] ;
             for(var m=0; m <= res.production_countries.length-1 ; m++) {
               countriesArr.push({name: res.production_countries[m].name}) ;
             }
-            movie.countries = countriesArr ;
+            item.movie.countries = countriesArr ;
           });
 
           mdb.movieCredits({id: movie_id}, function(err, res){
             for(var n=0 ; n < res.crew.length ; n++) {
               if(matchExact(res.crew[n].job,"Director")){
-                movie.director = res.crew[n].name ;
+                item.movie.director = res.crew[n].name ;
                 break ;
               }
             }
 
             var castArr = [] ;
             for(var j=0 ; j <= 4 ; j++) { // take the first 5 stars
-              castArr.push({name: res.cast[j].name}) ;
+              if(res.cast[j]){
+                castArr.push({name: res.cast[j].name}) ;
+              }
             }
-            movie.cast = castArr ;  
+            item.movie.cast = castArr ;  
           });
           break ; // only take the first result
         } //end if
       } // end for
 
-      console.log(JSON.stringify(movie));
+      console.log(JSON.stringify(item.movie));
 
       deferred.resolve(item);
     }
