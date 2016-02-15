@@ -22,8 +22,12 @@ module.exports = function (src, dest){
     test: function(){
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       getDirections(src, dest, function(err, res){
         console.log(res[0].direction);
+=======
+      getDirections(src, dest, function(){
+>>>>>>> Stashed changes
 =======
       getDirections(src, dest, function(){
 >>>>>>> Stashed changes
@@ -227,6 +231,9 @@ function parseDirection(src, dest, json){
 =======
             console.log("Error!! Please enter different source and destination");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -238,7 +245,11 @@ function getDirections(src, dest, callback) {
   request.get('https://maps.googleapis.com/maps/api/directions/json?alternatives=true&origin=' + src +
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   'Berlin&destination=' + dest + ',Berlin&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+=======
+  '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
+>>>>>>> Stashed changes
 =======
   '&destination=' + dest + '&mode=transit&key=AIzaSyBCroIiU9zWXaFxW0SE62fcSGxdQsP0XiY',
 >>>>>>> Stashed changes
@@ -251,7 +262,11 @@ function getDirections(src, dest, callback) {
         direction_string.push("\nFetching the Directions....\n");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         //console.log("\nFetching the Directions....\n");
+=======
+        console.log("\nFetching the Directions....\n");
+>>>>>>> Stashed changes
 =======
         console.log("\nFetching the Directions....\n");
 >>>>>>> Stashed changes
@@ -264,7 +279,11 @@ function getDirections(src, dest, callback) {
           direction_string.push("source or destination not found");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           //console.log("source or destination not found");
+=======
+          console.log("source or destination not found");
+>>>>>>> Stashed changes
 =======
           console.log("source or destination not found");
 >>>>>>> Stashed changes
