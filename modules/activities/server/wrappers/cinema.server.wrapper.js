@@ -49,6 +49,8 @@ function responseHandler (response) {
 
 exports.fetch = function (near) {
 
+  console.log('fetch');
+
   near = near || 'Berlin';
 
   var results = [];
@@ -75,79 +77,76 @@ exports.fetch = function (near) {
   return Q.all(results);
 };
 
-exports.extract = function (items) {
+exports.extract = function (item) {
 
-  console.log('extract', items.length);
+  console.log('extract', item);
 
-  return items.map(function (item) {
+  // Exit if required properties are missing
+  if (!item.html || !item.date) return [];
 
-    // Exit if required properties are missing
-    if (!item.html || !item.date) return [];
+  var $ = cheerio.load(item.html);
 
-    var $ = cheerio.load(item.html);
+  // Exit if there is no information
+  if ($('div.theater').length === 0) return [];
 
-    // Exit if there is no information
-    if ($('div.theater').length === 0) return [];
+  var results = [];
+  var result = {
+    //infos: '',
+    time: '',
+    date: item.date,
+    theater: {
+      name: '',
+      address: ''
+    },
+    movie: {
+      title: ''
+    }
+  };
 
-    var results = [];
-    var result = {
-      //infos: '',
-      time: '',
-      date: item.date,
-      theater: {
-        name: '',
-        address: ''
-      },
-      movie: {
-        title: ''
-      }
-    };
+  $('div.theater').each(function(i, element) {
 
-    $('div.theater').each(function(i, element) {
+    var desc = $(this).children('.desc');
 
-      var desc = $(this).children('.desc');
+    result.theater.name = $(desc).children('.name').text();
+    result.theater.address = $(desc).children('.info').text();
 
-      result.theater.name = $(desc).children('.name').text();
-      result.theater.address = $(desc).children('.info').text();
+    var showtimes = $(this).children('.showtimes');
 
-      var showtimes = $(this).children('.showtimes');
+    $(showtimes).find('.name').each(function (i, elem) {
 
-      $(showtimes).find('.name').each(function (i, elem) {
+      result.movie.title = $(this).text();
 
-        result.movie.title = $(this).text();
+      var infos = $(this).next() ;
 
-        var infos = $(this).next() ;
+      //result.infos = infos.text();
 
-        //result.infos = infos.text();
+      var times = $(infos).next().text().trim().split(/\s+/);
 
-        var times = $(infos).next().text().trim().split(/\s+/);
+      times.forEach(function (time) {
 
-        times.forEach(function (time) {
+        result.time = time;
 
-          result.time = time;
-
-          results.push(_.cloneDeep(result));
-        });
+        results.push(_.cloneDeep(result));
       });
     });
+  });
 
-    return results;
-  }).reduce(function(a, b) {
-
-    return a.concat(b);
-  }, []);
+  return results;
 };
 
 exports.enrich = function (item) {
 
+  console.log('enrich');
+
+  var results = [];
   var mdb = moviedb(keys.moviedb);
-  var deferred = Q.defer();
 
   mdb.searchMovie({ query: item.movie.title }, function (error, response) {
 
     if (error) {
 
-      deferred.reject(new Error(error));
+      //deferred.reject(new Error(error));
+      console.log(error);
     }
     else {
 
@@ -206,75 +205,70 @@ exports.enrich = function (item) {
         });
       });
 
+      results.push(movie);
+    }
+  });
+
+  return results;
+};
+
+exports.clean = function (item) {
+
+  console.log('clean');
+
+  var time = item.time.trim();
+  var parts = time.split(':');
+
+  if (time === '' || parts.length !== 2) return null;
+
+  // Compute a proper date as startTime
+
+  var startTime = new Date();
+  startTime.setTime(item.date);
+  startTime.setHours(parts[0]);
+  startTime.setMinutes(parts[1]);
+  startTime.setSeconds(0);
+  startTime.setMilliseconds(0);
+
+  var result = {
+    startTime: startTime,
+    title: item.title,
+    movie: item.movie
+  };
+
+  return result;
+};
+
+exports.filter = function (item) {
+
+  console.log('filter');
+
+  if (item === null) return [];
+
+  return item;
+};
+
+exports.save = function (item) {
+
+  console.log('save');
+
+  var movie = new CinemaActivity(item);
+  var deferred = Q.defer();
+
+  movie.save(function (error) {
+
+    if (error) {
+
+      //deferred.reject(new Error(error));
+      deferred.resolve(error);
+    }
+    else {
+
       deferred.resolve(movie);
     }
   });
 
   return deferred.promise;
-};
-
-exports.clean = function (items) {
-
-  console.log('clean', items.length);
-
-  return items.map(function (item) {
-
-    var time = item.time.trim();
-    var parts = time.split(':');
-
-    if (time === '' || parts.length !== 2) return null;
-
-    // Compute a proper date as startTime
-
-    var startTime = new Date();
-    startTime.setTime(item.date);
-    startTime.setHours(parts[0]);
-    startTime.setMinutes(parts[1]);
-    startTime.setSeconds(0);
-    startTime.setMilliseconds(0);
-
-    var result = {
-      startTime: startTime,
-      title: item.title,
-      movie: item.movie
-    };
-
-    return result;
-  });
-};
-
-exports.filter = function (items) {
-
-  console.log('filter', items.length);
-
-  return items.filter(function (item, index, array) {
-
-    return (item !== null);
-  });
-};
-
-exports.save = function (items) {
-
-  return items.map(function (item) {
-
-    var movie = new CinemaActivity(item);
-    var deferred = Q.defer();
-
-    movie.save(function (error) {
-
-      if (error) {
-
-        //deferred.reject(new Error(error));
-        deferred.resolve(error);
-      }
-      else {
-
-        deferred.resolve(movie);
-      }
-    });
-
-    return deferred.promise;
-  });
 };
 
 function matchExact (r, str) {

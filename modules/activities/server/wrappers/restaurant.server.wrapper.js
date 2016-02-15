@@ -18,8 +18,6 @@ var
   ;
 
 /**
- * Retrieve movie showtimes by scraping Google
- * This will likely get us blacklisted
  */
 
 function responseHandler (response) {
@@ -37,7 +35,11 @@ function responseHandler (response) {
 
 exports.fetch = function (near, cuisine, radius) {
 
-  var results = [];
+  console.log('fetch');
+
+  near = near || 'Berlin';
+  cuisine = cuisine || 'Italian';
+  radius = radius || 5;
 
   var baseurl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
   var params = {
@@ -50,100 +52,83 @@ exports.fetch = function (near, cuisine, radius) {
   };
 
   var options = {
-    uri: '',
+    uri: util.makeurl(baseurl, params),
     resolveWithFullResponse: true
   };
 
-  options.uri = util.makeurl(baseurl, params);
+  return request(options).then(responseHandler);
+};
 
-  results.push(request(options).then(responseHandler));
+exports.extract = function (item) {
+
+  console.log('extract', item);
+
+  // Exit if required properties are missing
+  if (!item.body) return [];
+
+  var results = [];
+  var result = {
+    date: item.date,
+    restaurant: {
+      name: '',
+      address: '',
+      aggregateRating: ''
+    }
+  };
+
+  var places = JSON.parse(item.body);
+
+  if (places.status === 'NOT_FOUND') return [];
+
+  places.results.forEach(function (place) {
+
+    result.restaurant.name = place.name;
+    result.restaurant.address = place.vicinity;
+
+    if (place.rating.trim()) {
+
+      result.restaurant.aggregateRating = place.rating;
+    }
+
+    results.push(_.cloneDeep(result));
+  });
 
   return results;
 };
 
-exports.extract = function (items) {
+exports.clean = function (item) {
 
-  console.log('extract', items.length);
+  console.log('clean');
 
-  return items.map(function (item) {
-
-    // Exit if required properties are missing
-    if (!item.body) return null;
-
-    var results = [];
-    var result = {
-      date: item.date,
-      restaurant: {
-        name: '',
-        address: '',
-        aggregateRating: ''
-      }
-    };
-
-    var places = JSON.parse(item.body);
-
-    if (places.status === "NOT_FOUND") return null;
-
-    places.results.forEach(function (place) {
-
-      result.restaurant.name = place.name;
-      result.restaurant.address = place.vicinity;
-
-      if (place.rating.trim()) {
-
-        result.restaurant.aggregateRating = place.rating;
-      }
-
-      results.push(_.cloneDeep(result));
-    });
-
-    return results;
-  }).reduce(function(a, b) {
-
-    return a.concat(b);
-  }, []);
+  return item;
 };
 
-exports.clean = function (items) {
+exports.filter = function (item) {
 
-  console.log('clean', items.length);
+  console.log('filter');
 
-  return items.map(function (item) {
+  if (item === null) return [];
 
-    return item;
-  });
+  return item;
 };
 
-exports.filter = function (items) {
+exports.save = function (item) {
 
-  console.log('filter', items.length);
+  var activity = new RestaurantActivity(item);
+  var deferred = Q.defer();
 
-  return items.filter(function (item, index, array) {
+  activity.save(function (error) {
 
-    return (item !== null);
+    if (error) {
+
+      //deferred.reject(new Error(error));
+      deferred.resolve(error);
+    }
+    else {
+
+      deferred.resolve(activity);
+    }
   });
-};
 
-exports.save = function (items) {
-
-  return items.map(function (item) {
-
-    var activity = new RestaurantActivity(item);
-    var deferred = Q.defer();
-
-    activity.save(function (error) {
-
-      if (error) {
-
-        //deferred.reject(new Error(error));
-        deferred.resolve(error);
-      }
-      else {
-
-        deferred.resolve(activity);
-      }
-    });
-
-    return deferred.promise;
-  });
+  return deferred.promise;
 };

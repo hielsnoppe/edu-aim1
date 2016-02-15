@@ -12,8 +12,11 @@ module.exports = function (app) {
     .get(activities.list)
     .post(activities.create);
 
-  app.route('/api/activities/update')
-    .get(activities.update);
+  app.route('/api/activities/cinema')
+    .get(activities.cinema);
+
+  app.route('/api/activities/restaurant')
+    .get(activities.restaurant);
 
   app.route('/api/activities/transport/:src/:dest')
     .get(activities.transport);

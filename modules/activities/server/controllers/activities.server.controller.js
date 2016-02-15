@@ -5,17 +5,16 @@
  */
 
 var
-  cheerio = require('cheerio'),
   mongoose = require('mongoose'),
-  path = require('path'),
-  Q = require('q'),
-  request = require('request')
+  path = require('path')
   ;
 
 var
   CinemaActivity = mongoose.model('CinemaActivity'),
   cinemaWrapper = require('../wrappers/cinema.server.wrapper'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  Pipeline = require(path.resolve('./modules/common/server/pipeline.server')),
+  restaurantWrapper = require('../wrappers/restaurant.server.wrapper'),
   transportWrapper = require('../wrappers/transport.server.wrapper')
   ;
 
@@ -129,24 +128,46 @@ exports.activityByID = function (req, res, next, id) {
 */
 
 /**
- * Update activities
+ * Update cinema activities
  */
 
-exports.update = function (req, res) {
+exports.cinema = function (req, res) {
 
-  cinemaWrapper.fetch('Berlin')
-    .then(cinemaWrapper.extract)
-    //.then(cinemaWrapper.enrich)
-    .then(cinemaWrapper.clean)
-    .then(cinemaWrapper.filter)
-    .then(cinemaWrapper.save)
-    .then(function (report) {
+  var pipeline = new Pipeline()
+    .pipe(cinemaWrapper.fetch)
+    .pipe(cinemaWrapper.extract)
+    .pipe(cinemaWrapper.enrich)
+    .pipe(cinemaWrapper.clean)
+    .pipe(cinemaWrapper.filter)
+    .pipe(cinemaWrapper.save);
 
-      console.log('done', report);
+  var results = pipeline.start('Berlin');
 
-      res.json(report);
-    })
-    .done();
+  results.then(function (result) {
+    res.json(result);
+  });
+};
+
+/**
+ * Update restaurant
+ */
+
+exports.restaurant = function (req, res) {
+
+  console.log('restaurant');
+
+  var pipeline = new Pipeline()
+    .pipe(restaurantWrapper.fetch)
+    .pipe(restaurantWrapper.extract)
+    .pipe(restaurantWrapper.clean)
+    .pipe(restaurantWrapper.filter)
+    .pipe(restaurantWrapper.save);
+
+  var results = pipeline.start('Berlin', 'Italian', 5);
+
+  results.then(function (result) {
+    res.json(result);
+  });
 };
 
 /**
