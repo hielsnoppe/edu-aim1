@@ -16,11 +16,12 @@ var theater = require("./theater.json");
 
 //Checking
 
-var transport = require('../bvgapi/transport_json_parser.js')("wedding", "Hansaplatz");
+
+/*var transport = require('../bvgapi/transport_json_parser.js')("wedding", "Hansaplatz");
 transport.getTransInfo(function(err, directionInfo) {
-  console.log("here "+directionInfo[0].duration);
+  console.log("here "+directionInfo.duration);
   //travelTime = directionInfo[0].duration;
-});
+});*/
 
 //Separate activities and descriptions into different arrays
 console.log('Separate Activities and Descriptions');
@@ -51,16 +52,20 @@ filteredActivities.forEach(addTreeProperties);
 //Combine activities chronologically into a Graph-alike structure
 console.log("Combining activities chronologically into a Graph-alike structure");
 activityTypeList.forEach(createGraph);
+
 //console.log(activitiesGraphEdges);
 //console.log(activitiesGraphNodes);
 
 //Create Schedules by traversing the Tree-like structure from leaves to root
 console.log("Create Schedules by traversing the Tree-like structure from leaves to root");
 activitiesGraphEdges.forEach(createWeightedSchedule);
-console.log(activitiesSchedules);
+//console.log(activitiesSchedules);
 
 //Select the best schedule by gain/cost ratio
-//var selection = optimizer(activitiesSchedules);
+var selection = optimizer(activitiesSchedules);
+console.log("The best schedule is: ");
+console.log(selection);
+
 
 //Functions
 
@@ -93,10 +98,9 @@ function listActivityTypes(element, index, array){
   activityTypeList.push(element.type);
 };
 //Fake function to get a travel time
-function fakeTravelTime(origin, destiny, time){
-  console.log("From: "+origin.lat+','+origin.lng);
-  console.log("To: "+destiny.lat+','+destiny.lng);
-  console.log("At: "+time);
+function fakeTravelTime(origin, destiny){
+  //console.log("From: "+origin+','+origin);
+  //console.log("To: "+destiny+','+destiny);
   return (Math.round(45*Math.random()));
 };
 
@@ -116,12 +120,7 @@ function createGraph(activityType, index, array){
             destiny = Destiny.activityID;
             var stOrigin = Origin.location.lat+","+Origin.location.lng;
             var stDestiny = Destiny.location.lat+","+Destiny.location.lng;
-            travelTime = fakeTravelTime(Origin.location, Destiny.location, '0:00');
-            /*var transport = require('../bvgapi/transport_json_parser.js')(stOrigin, stDestiny);
-            transport.getTransInfo(function(err, directionInfo) {
-              console.log("here "+directionInfo);
-              //travelTime = directionInfo[0].duration;
-            });*/
+            travelTime = fakeTravelTime(stOrigin, stDestiny)
             Destiny.parent.push(origin);
             Origin.child.push(destiny);
             Destiny.leaf=true;
@@ -166,9 +165,13 @@ function createWeightedSchedule(element, index, array){
   var node = filteredActivities.find(function(item){
     return (item.activityID===element.destiny);
   });
+  var cumulateRating=0;
+  var cumulateTravelTime=0;
   //console.log(node.leaf);
   if(node.leaf===true){
     normRating=nomalizeRating(node);
+    cumulateRating = cumulateRating + normRating;
+    cumulateTravelTime = cumulateTravelTime + element.travelTime;
     thisSchedule.push({'step':step, 'origin': element.origin, 'destiny': element.destiny, 'travelTime': element.travelTime, 'normRating': normRating });
     step = step -1;
     while(step > 0){
@@ -181,9 +184,14 @@ function createWeightedSchedule(element, index, array){
         return (item.activityID===next.destiny);
       });
       normRating=nomalizeRating(node);
+      cumulateRating = cumulateRating + normRating;
+      cumulateTravelTime = cumulateTravelTime + next.travelTime;
       thisSchedule.push({'step':step, 'origin': next.origin, 'destiny': next.destiny, 'travelTime': next.travelTime, 'normRating': normRating });
       step = step - 1;
     }
+    thisSchedule.push({'scheduleRating': cumulateRating});
+    thisSchedule.push({'scheduleTime': cumulateTravelTime});
+    thisSchedule.push({'scheduleOptimalRatio': cumulateRating/cumulateTravelTime});
   }
   //console.log(element);
   //console.log(thisSchedule);
@@ -203,7 +211,25 @@ function nomalizeRating(node){
 
 //Fucntion selectSchedule
 function optimizer(arr){
-  var schedule = 0;
-
+  var schedule = new Array();
+  var lowest = Number.POSITIVE_INFINITY;
+  var highest = Number.NEGATIVE_INFINITY;
+  var tmp;
+  var index=0;
+  for (var i=arr.length-1; i>=0; i--) {
+      tmp = arr[i][0].scheduleOptimalRatio;
+      //console.log(tmp);
+      if (tmp < lowest) lowest = tmp;
+      if (tmp > highest){
+        highest = tmp;
+        index = i;
+      }
+  }
+  schedule.push(filteredActivities.find(function(element){return (element.activityID===arr[index][3].origin)}));
+  schedule.push(filteredActivities.find(function(element){return (element.activityID===arr[index][3].destiny)}));
+  for (var i=4; i < arr[index].length; i++){
+    schedule.push(filteredActivities.find(function(element){return (element.activityID===arr[index][i].destiny)}));
+  }
   return schedule;
+  console.log(arr[index]);
 };

@@ -9,7 +9,7 @@ if(src===null || dest ===null){
 	console.log("^^^^^^Inside Test source^^^^^^^^^ ")
 
 
-	/*********How to get general travel journey info "arrival_time", "departure_time", "distance", 
+	/*********How to get general travel journey info "arrival_time", "departure_time", "distance",
 					"duration" by the example shown in console.log statement*/
 	var transport = require('./transport_json_parser.js')(src, dest);
 	transport.getTransInfo(function(err, transInfo){
