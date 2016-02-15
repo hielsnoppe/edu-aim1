@@ -20,6 +20,11 @@ var
   util = require('../../../common/server/util.server.js')
   ;
 
+// GPS variables
+var geocoderProvider = 'openstreetmap';
+var httpAdapter = 'http';
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter);
+
 /**
  * Restrict results to only movies that are released
  * in year1 or year2. Won't work on showings of old
@@ -96,7 +101,11 @@ exports.extract = function (items) {
       date: item.date,
       theater: {
         name: '',
-        address: ''
+        address: '',
+        geo_location: {
+          latitude: '',
+          longitude: ''
+        }
       },
       movie: {
         title: ''
@@ -108,7 +117,15 @@ exports.extract = function (items) {
       var desc = $(this).children('.desc');
 
       result.theater.name = $(desc).children('.name').text();
-      result.theater.address = $(desc).children('.info').text();
+      var address = $(desc).children('.info').text();
+      result.theater.address = address ;
+
+      //convert to geo coordinates
+      geocoder.geocode(address, function(err, res) {
+        var loc = res[0] ;
+        result.theater.geo_location.latitude = loc.latitude ;
+        result.theater.geo_location.longitude = loc.longitude ;
+      });
 
       var showtimes = $(this).children('.showtimes');
 
@@ -163,6 +180,7 @@ exports.enrich = function (item) {
       // Example of the movie JSON
       // {title: Genius
       //  releaseDate: 2016-02-10
+      // rating: 6.8
       //  adult: false  *true if adult movie, else false*
       //  plot: Adaptation of the award winning biography Max Perkins
       //  runtime: 114  *in minutes*
@@ -177,7 +195,7 @@ exports.enrich = function (item) {
         if (date.indexOf(year1) > -1 || date.indexOf(year2) > -1){
           //item.movie.title = response.results[i].title ;
           item.movie.releaseDate = date ;
-         
+          item.movie.rating = response.results[i].vote_average ;
           movie_id = res.results[i].id ;
           mdb.movieInfo({id: movie_id}, function(err, res){
             item.movie.adult = res.adult ;

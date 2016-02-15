@@ -34,6 +34,18 @@ var CinemaActivitySchema = ActivitySchema.extend({
       type: String,
       default: '',
       trim: true
+    },
+    geo_location: {
+          latitude: {
+            type: String,
+            default: '',
+            trim: true
+          },
+          longitude: {
+            type: String,
+            default: '',
+            trim: true
+          }
     }
   },
   movie: {
@@ -46,6 +58,11 @@ var CinemaActivitySchema = ActivitySchema.extend({
     releaseDate: {
       type: Date,
       default: Date.now,
+      trim: true
+    },
+    rating: {
+      type: String,
+      default: '',
       trim: true
     },
     adult: {
