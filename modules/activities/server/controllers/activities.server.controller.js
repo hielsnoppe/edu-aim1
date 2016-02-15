@@ -10,122 +10,68 @@ var
   ;
 
 var
-  CinemaActivity = mongoose.model('CinemaActivity'),
-  cinemaWrapper = require('../wrappers/cinema.server.wrapper'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  Pipeline = require(path.resolve('./modules/common/server/pipeline.server')),
-  restaurantWrapper = require('../wrappers/restaurant.server.wrapper'),
-  transportWrapper = require('../wrappers/transport.server.wrapper')
+  Pipeline = require(path.resolve('./modules/common/server/pipeline.server'))
   ;
 
+var wrappers = {
+  'cinema': require('../wrappers/cinema.server.wrapper'),
+  'restaurant': require('../wrappers/restaurant.server.wrapper'),
+  'transport': require('../wrappers/transport.server.wrapper')
+};
 
-/**
- * Create a movie
- */
+exports.specifications = function (req, res) {
 
-exports.create = function (req, res) {
-  var movie = new CinemaActivity(req.body);
-  movie.user = req.user;
-
-  movie.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(movie);
-    }
+  res.json({
+    foo: 'bar'
   });
 };
 
-/**
- * Show the current movie
- */
+exports.find = function (req, res) {
 
-exports.read = function (req, res) {
-  res.json(req.movie);
-};
+  var type = req.params.type;
 
-/**
- * Update a movie
- */
-
-exports.update = function (req, res) {
-  var movie = req.movie;
-
-  movie.title = req.body.title;
-  movie.content = req.body.content;
-
-  movie.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(movie);
+  var activityDescription = {
+    "_type": "RestaurantActivity",
+    "weight": 5,
+    "properties": {
+      "cuisine": {
+        "weight": 5,
+        "values": {
+          "Italian": 5
+        }
+      },
+      "aggregateRating": {
+        "weight": 5,
+        "minimumValue": 3
+      }
     }
-  });
-};
+  };
 
-/**
- * Delete an movie
- */
-
-exports.delete = function (req, res) {
-  var movie = req.movie;
-
-  movie.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(movie);
+  activityDescription = {
+    "_type": "CinemaActivity",
+    "weight": 5,
+    "properties": {
+      "startTime": {
+        "weight": 5,
+        "minimumValue": new Date()
+      }
     }
-  });
-};
+  };
 
-/**
- * List of Movies
- */
+  var activities;
 
-exports.list = function (req, res) {
-  CinemaActivity.find().sort('-created').populate('user', 'displayName').exec(function (err, movies) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(movies);
-    }
-  });
-};
+  if (!wrappers.hasOwnProperty(type)) {
 
-/**
- * Movie middleware
- */
-/*
-exports.activityByID = function (req, res, next, id) {
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'Movie is invalid'
-    });
+    return res.status(400).json('No such wrapper');
   }
 
-  Activity.findById(id).populate('user', 'displayName').exec(function (err, movie) {
-    if (err) {
-      return next(err);
-    } else if (!movie) {
-      return res.status(404).send({
-        message: 'No movie with that identifier has been found'
-      });
-    }
-    req.movie = movie;
-    next();
+  wrappers[type].find(activityDescription)
+  .then(function (result) {
+
+    res.json(result);
   });
 };
-*/
 
 /**
  * Update cinema activities
@@ -133,10 +79,12 @@ exports.activityByID = function (req, res, next, id) {
 
 exports.cinema = function (req, res) {
 
+  var cinemaWrapper = wrappers.cinema;
+
   var pipeline = new Pipeline()
     .pipe(cinemaWrapper.fetch)
     .pipe(cinemaWrapper.extract)
-    .pipe(cinemaWrapper.enrich)
+    //.pipe(cinemaWrapper.enrich)
     .pipe(cinemaWrapper.clean)
     .pipe(cinemaWrapper.filter)
     .pipe(cinemaWrapper.save);
@@ -154,7 +102,7 @@ exports.cinema = function (req, res) {
 
 exports.restaurant = function (req, res) {
 
-  console.log('restaurant');
+  var restaurantWrapper = wrappers.restaurant;
 
   var pipeline = new Pipeline()
     .pipe(restaurantWrapper.fetch)
@@ -178,6 +126,8 @@ exports.transport = function (req, res) {
 
   var src = req.params.src;
   var dest = req.params.dest;
+
+  var transportWrapper = wrappers.transport;
 
   var result = transportWrapper.fetch(src, dest);
 

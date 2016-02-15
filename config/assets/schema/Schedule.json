@@ -1,7 +1,17 @@
 {
-  "date": "YYYYMMDD",
-  "activities": [
+  "startDateTime": "",
+  "startLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
 
+  "endDateTime": "",
+  "endLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
+
+  "activities": [
     {
       "sequenceNo": "1",
       "type": "TransportActivity",
@@ -86,5 +96,4 @@
       }
     }
   ]
-
 }

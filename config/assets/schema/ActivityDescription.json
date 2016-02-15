@@ -1,16 +1,16 @@
 {
-  "type": "RestaurantActivity",
-
-  "properties": [
-    {
+  "_type": "RestaurantActivity",
+  "weight": 5,
+  "properties": {
+    "cuisine": {
       "weight": 5,
-      "name": "cuisine",
-      "values": [
-        {
-          "weight": 5,
-          "value": "Italian"
-        }
-      ]
+      "values": {
+        "Italian": 5
+      }
+    },
+    "aggregateRating": {
+      "weight": 5,
+      "minimumValue": 3
     }
-  ]
+  }
 }

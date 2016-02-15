@@ -29,11 +29,6 @@ var
   year1 = 2015,
   year2 = 2016;
 
-/**
- * Retrieve movie showtimes by scraping Google
- * This will likely get us blacklisted
- */
-
 function responseHandler (response) {
 
   if (response.statusCode === 200) {
@@ -271,9 +266,33 @@ exports.save = function (item) {
   return deferred.promise;
 };
 
-function matchExact (r, str) {
+exports.find = function (activityDescription) {
 
-  var match = str.match(r);
+  var query = {}; // make from activityDescription
 
-  return match !== null && str === match[0];
-}
+  for (var property in activityDescription.properties) {
+
+    var propertyDescription = activityDescription.properties[property];
+
+    if (propertyDescription.hasOwnProperty('weight')) {}
+
+    if (propertyDescription.hasOwnProperty('minimumValue')) {
+
+      query[property] = {
+        $gt: propertyDescription.minimumValue
+      };
+    }
+    else if (propertyDescription.hasOwnProperty('values')) {
+
+      for (var val in propertyDescription.values) {
+
+        query[property] = val;
+
+        // FIXME This neglects all but the first value!
+        break;
+      }
+    }
+  }
+
+  return CinemaActivity.find(query);
+};
