@@ -22,7 +22,11 @@ module.exports = function (src, dest){
     //*********To use it for console
     test: function(){
       getDirections(src, dest, function(err, res){
-        console.log(res[0].direction);
+       // console.log("Length is "+res[0].directionString.length);
+        for (var i = 0; i < res[0].directionString.length; i++) {
+          console.log(res[0].directionString[i]);
+        };
+        
       });
     },
     //*********To use it in other JS file, returns a JSON object with general details of the journey
@@ -174,7 +178,7 @@ function parseDirection(src, dest, json){
                 var noStep = steps;
                 var steps_count = 1;
                 direction_string.push("\n\t---->Directions<----");
-                console.log("\n\t---->Directions<----");
+                //console.log("\n\t---->Directions<----");
                 for (var i = 0; i < steps.length; i++) {
 
                    //****It Works. Only if you want to parse the steps from JSON****
