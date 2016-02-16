@@ -18,8 +18,6 @@ var theater = require('./theater.json');
 
 //Checking
 
-<<<<<<< HEAD
-
 /*var transport = require('../bvgapi/transport_json_parser.js')("wedding", "Hansaplatz");
 transport.getTransInfo(function(err, directionInfo) {
   console.log("here "+directionInfo.duration);
@@ -106,16 +104,11 @@ function listActivityTypes(element, index, array){
   activityTypeList.push(element.type);
 }
 //Fake function to get a travel time
-<<<<<<< HEAD
 function fakeTravelTime(origin, destiny){
   //console.log("From: "+origin+','+origin);
   //console.log("To: "+destiny+','+destiny);
-=======
-function fakeTravelTime(origin, destiny, time){
-  console.log('From: '+origin.lat+','+origin.lng);
-  console.log('To: '+destiny.lat+','+destiny.lng);
-  console.log('At: '+time);
->>>>>>> 0c1c10b7762ceb5a5101fbd670b22035eb5e9c17
+  console.log('From: '+origin+','+origin);
+  console.log('To: '+destiny+','+destiny);
   return (Math.round(45*Math.random()));
 }
 
@@ -133,20 +126,17 @@ function createGraph(activityType, index, array){
         filteredActivities.forEach(function(Destiny){
           if(Destiny.type===array[index+1]){
             destiny = Destiny.activityID;
-<<<<<<< HEAD
             var stOrigin = Origin.location.lat+","+Origin.location.lng;
             var stDestiny = Destiny.location.lat+","+Destiny.location.lng;
             travelTime = fakeTravelTime(stOrigin, stDestiny)
-=======
             var stOrigin = Origin.location.lat+','+Origin.location.lng;
             var stDestiny = Destiny.location.lat+','+Destiny.location.lng;
-            travelTime = fakeTravelTime(Origin.location, Destiny.location, '0:00');
+            travelTime = fakeTravelTime(stOrigin, stDestiny);
             /*var transport = require('../bvgapi/transport_json_parser.js')(stOrigin, stDestiny);
             transport.getTransInfo(function(err, directionInfo) {
               console.log('here '+directionInfo);
               //travelTime = directionInfo[0].duration;
             });*/
->>>>>>> 0c1c10b7762ceb5a5101fbd670b22035eb5e9c17
             Destiny.parent.push(origin);
             Origin.child.push(destiny);
             Destiny.leaf=true;
@@ -230,10 +220,11 @@ function createWeightedSchedule(element, index, array){
 //Function to normalize the raiting
 function nomalizeRating(node){
   var actDescription = activitiesDescription.find(function(item){
-    return (item.type===node.type);
+    return (item.type === node.type);
   });
   return(node.aggregateRating/actDescription.properties.maxWeight);
 }
+
 
 //Fucntion selectSchedule
 function optimizer(arr){
@@ -257,9 +248,6 @@ function optimizer(arr){
     schedule.push(filteredActivities.find(function(element){return (element.activityID===arr[index][i].destiny)}));
   }
   return schedule;
-<<<<<<< HEAD
+
   console.log(arr[index]);
 };
-=======
-}
->>>>>>> 0c1c10b7762ceb5a5101fbd670b22035eb5e9c17
